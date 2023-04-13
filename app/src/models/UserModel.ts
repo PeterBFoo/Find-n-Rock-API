@@ -5,10 +5,14 @@ import { MusicalGenreModel } from "./MusicGenreModel";
 import { EntrepreneourInterface } from "./interfaces/EntrepreneourInterface";
 import { MusicalGroupInterface } from "./interfaces/MusicalGroupInterface";
 import { Tags } from "./interfaces/Tags";
+import { RoleInterface } from "./interfaces/RoleInterface";
 
+type ValidRole = "entrepreneur" | "group"
 
 @Entity("User")
 export class UserModel implements EntrepreneourInterface, MusicalGroupInterface {
+    static VALID_ROLES = ["entrepreneur", "group"]
+
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -65,9 +69,9 @@ export class UserModel implements EntrepreneourInterface, MusicalGroupInterface 
 
     @ManyToOne(() => RoleModel, (role) => role.id)
     @JoinColumn()
-    role: number;
+    role: RoleInterface;
 
-    constructor(username: string, password: string, name: string, description: string, email: string, image: string, address: string, country: string, roleId: number, phone?: string, integrants?: number, musicalGenres?: Tags[]) {
+    constructor(username: string, password: string, name: string, description: string, email: string, image: string, address: string, country: string, roleId: RoleInterface, phone?: string, integrants?: number, musicalGenres?: Tags[]) {
         this.username = username;
         this.password = password ? bcrypt.hashSync(password) : "";
         this.name = name;
@@ -83,22 +87,16 @@ export class UserModel implements EntrepreneourInterface, MusicalGroupInterface 
         this.musicalGenres = musicalGenres || null;
     }
 
-    static getMandatoryFields(role: string): string[] {
-        let userBasicProperties = ["username", "password", "name", "description", "email", "address", "country", "image", "role"]
-        let entrepreneourProperties = ["phone"]
-        let musicalGroupProperties = ["integrants", "musicalGenres"]
-
-        if (role === "entrepreneour") {
-            return userBasicProperties.concat(entrepreneourProperties);
-        } else if (role === "musicalGroup") {
-            return userBasicProperties.concat(musicalGroupProperties);
+    static getMandatoryFieldsFor(userRole: ValidRole): string[] {
+        if (userRole == "entrepreneur") {
+            return ["username", "password", "name", "description", "email", "address", "country", "phone", "image", "role"]
         } else {
-            return userBasicProperties;
+            return ["username", "password", "name", "description", "email", "address", "country", "integrants", "image", "role"]
         }
     }
 
-    static isValid(user: any, roleType: string): boolean {
-        const mandatoryFields = this.getMandatoryFields(roleType);
+    static isValid(user: any, userRole: ValidRole): boolean {
+        const mandatoryFields = this.getMandatoryFieldsFor(userRole);
         for (const field of mandatoryFields) {
             if (!user[field] || user[field] === '') {
                 return false;
