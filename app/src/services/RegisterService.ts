@@ -2,6 +2,7 @@ import connection from "../db/dataSource";
 import { Repository } from 'typeorm';
 import { UserModel } from "../models/UserModel";
 import { Service } from "./interfaces/Service";
+import { ErrorResponse } from "./types/CommonTypes";
 
 export class RegisterService implements Service {
     private static instance: RegisterService;
@@ -15,7 +16,7 @@ export class RegisterService implements Service {
         return RegisterService.instance;
     }
 
-    async register(user: UserModel): Promise<UserModel | { error: string }> {
+    async register(user: UserModel): Promise<UserModel | ErrorResponse> {
         if (await this.userExists(user.username)) {
             return {
                 error: "User already exists"
@@ -26,13 +27,11 @@ export class RegisterService implements Service {
     }
 
     private async userExists(username: string): Promise<boolean> {
-        const user = await this.repository.findOne({
+        return await this.repository.exist({
             where: {
                 username: username
             }
         });
-
-        return user != null;
     }
 
 

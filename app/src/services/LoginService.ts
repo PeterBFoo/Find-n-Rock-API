@@ -5,15 +5,8 @@ import { Repository } from 'typeorm';
 import connection from '../db/dataSource';
 import envConfig from '../config/DatabaseConfigurationConnection';
 import { Service } from './interfaces/Service';
-
-type LoginResponse = {
-    token: string,
-    user: object
-}
-
-type LoginError = {
-    error: string
-}
+import { LoginResponse } from './types/LoginTypes';
+import { ErrorResponse } from './types/CommonTypes';
 
 export class LoginService implements Service {
     private static instance: LoginService;
@@ -21,7 +14,7 @@ export class LoginService implements Service {
 
     private constructor() { }
 
-    static getInstance(): Service {
+    static getInstance(): LoginService {
         if (!LoginService.instance) {
             LoginService.instance = new LoginService();
         }
@@ -47,7 +40,7 @@ export class LoginService implements Service {
         return jwt.sign(user.username, envConfig.getSecretKey());
     }
 
-    async login(username: string, incomingPassword: string): Promise<LoginResponse | LoginError> {
+    async login(username: string, incomingPassword: string): Promise<LoginResponse | ErrorResponse> {
         const user = await this.getUser(username);
 
         if (user) {
