@@ -15,17 +15,15 @@ class Config {
     DB_NAME: string;
     SYNCHRONIZE: boolean;
     LOGGING: boolean;
+    SECRET_KEY: string;
 
     constructor() {
         dotenv.config({
             path: path.join(__dirname, "..", "..", "..", process.env.NODE_ENV + ".env")
         });
 
-        let port = process.env.PORT;
-        let dbPort = process.env.DB_PORT;
-
-        this.PORT = port != undefined ? parseInt(port) : 3000;
-        this.DB_PORT = dbPort != undefined ? parseInt(dbPort) : 5432;
+        this.PORT = process.env.PORT != undefined ? parseInt(process.env.PORT) : 3000;
+        this.DB_PORT = process.env.DB_PORT != undefined ? parseInt(process.env.DB_PORT) : 5432;
         this.DB_TYPE = process.env.DB_TYPE as DataSourceConnectionOptions || "postgres";
         this.NODE_ENV = process.env.NODE_ENV || "development";
         this.HOST = process.env.HOST || "localhost";
@@ -34,6 +32,7 @@ class Config {
         this.DB_NAME = process.env.DB_NAME || "";
         this.SYNCHRONIZE = process.env.SYNCHRONIZE === "true";
         this.LOGGING = process.env.LOGGING === "true";
+        this.SECRET_KEY = process.env.SECRET_KEY || "secret";
     }
 
     getPort(): number {
@@ -74,6 +73,10 @@ class Config {
 
     getEnv(): string {
         return this.NODE_ENV;
+    }
+
+    getSecretKey(): string {
+        return this.SECRET_KEY;
     }
 }
 
