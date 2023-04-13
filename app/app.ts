@@ -7,7 +7,8 @@ import bodyParser from 'body-parser';
 
 // ROUTES //
 import login from './src/routes/LoginRoute';
-const noAuthRoutes = [login]
+import register from './src/routes/RegisterRoute';
+const noAuthRoutes = [login, register]
 const authRoutes = []
 
 // DB //
