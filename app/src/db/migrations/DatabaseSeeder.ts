@@ -14,10 +14,11 @@ export class DataBaseSeeder implements MigrationInterface {
     public async up(): Promise<void> {
         await this.startConnection();
 
-        let entrepreneourRole = new RoleModel("entrepreneur", true, false);
-        let musicalGroupRole = new RoleModel("group", false, true);
+        let entrepreneourRole = new RoleModel("entrepreneur", true, false, false);
+        let musicalGroupRole = new RoleModel("group", false, true, false);
+        let adminRole = new RoleModel("admin", true, true, true);
 
-        await this.roleRepository.save([entrepreneourRole, musicalGroupRole]);
+        await this.roleRepository.save([entrepreneourRole, musicalGroupRole, adminRole]);
 
         let entrepreneourUser = new UserModel("username", "password", "Entrepreneour test", "Description test", "test@test.com", "https://www.testimage.com", "Avda Test 2", "Spain", entrepreneourRole, "123456789")
 

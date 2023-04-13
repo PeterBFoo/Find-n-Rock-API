@@ -17,9 +17,15 @@ export class RoleModel implements RoleInterface {
     @Column()
     canSubscribe: boolean;
 
-    constructor(name: string, canCreatePosts: boolean, canSubscribeToPosts: boolean) {
+    @Column({
+        default: false
+    })
+    canCreateRoles: boolean;
+
+    constructor(name: string, canCreatePosts: boolean, canSubscribeToPosts: boolean, canCreateRoles: boolean) {
         this.name = name;
         this.canManagePosts = canCreatePosts;
         this.canSubscribe = canSubscribeToPosts;
+        this.canCreateRoles = canCreateRoles;
     }
 }
