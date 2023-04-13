@@ -1,10 +1,11 @@
 import connection from "../db/dataSource";
 import { MusicalGenreModel } from "../models/MusicGenreModel";
 import { Repository } from 'typeorm';
+import { Service } from "./interfaces/Service";
 
-export class MusicGenreService {
+export class MusicGenreService implements Service {
     private static instance: MusicGenreService;
-    MusicGenreService: Repository<MusicalGenreModel> = connection.getRepository(MusicalGenreModel);
+    repository: Repository<MusicalGenreModel> = connection.getRepository(MusicalGenreModel);
 
     static getInstance(): MusicGenreService {
         if (!MusicGenreService.instance) {
@@ -15,7 +16,7 @@ export class MusicGenreService {
     }
 
     async getMusicGenre(name: string) {
-        return await this.MusicGenreService.findOne({
+        return await this.repository.findOne({
             where: {
                 name: name
             }
@@ -23,7 +24,7 @@ export class MusicGenreService {
     }
 
     async getMusicGenres(names: string[]): Promise<MusicalGenreModel[]> {
-        return await this.MusicGenreService.createQueryBuilder("genres")
+        return await this.repository.createQueryBuilder("genres")
             .where("genres.name IN (:...names)", { names: names })
             .getMany()
     }

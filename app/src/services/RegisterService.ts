@@ -1,10 +1,11 @@
 import connection from "../db/dataSource";
 import { Repository } from 'typeorm';
 import { UserModel } from "../models/UserModel";
+import { Service } from "./interfaces/Service";
 
-export class RegisterService {
+export class RegisterService implements Service {
     private static instance: RegisterService;
-    private userRepository: Repository<UserModel> = connection.getRepository(UserModel);
+    repository: Repository<UserModel> = connection.getRepository(UserModel);
 
     static getInstance(): RegisterService {
         if (!RegisterService.instance) {
@@ -21,11 +22,11 @@ export class RegisterService {
             };
         }
 
-        return await this.userRepository.save(user);
+        return await this.repository.save(user);
     }
 
     private async userExists(username: string): Promise<boolean> {
-        const user = await this.userRepository.findOne({
+        const user = await this.repository.findOne({
             where: {
                 username: username
             }

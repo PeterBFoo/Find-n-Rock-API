@@ -4,6 +4,7 @@ import { UserModel } from '../models/UserModel';
 import { Repository } from 'typeorm';
 import connection from '../db/dataSource';
 import envConfig from '../config/DatabaseConfigurationConnection';
+import { Service } from './interfaces/Service';
 
 type LoginResponse = {
     token: string,
@@ -14,13 +15,13 @@ type LoginError = {
     error: string
 }
 
-export class LoginService {
+export class LoginService implements Service {
     private static instance: LoginService;
-    userRepository: Repository<UserModel> = connection.getRepository(UserModel);
+    repository: Repository<UserModel> = connection.getRepository(UserModel);
 
     private constructor() { }
 
-    static getInstance(): LoginService {
+    static getInstance(): Service {
         if (!LoginService.instance) {
             LoginService.instance = new LoginService();
         }
@@ -29,7 +30,7 @@ export class LoginService {
     }
 
     async getUser(username: string): Promise<UserModel | null> {
-        let user = await this.userRepository.findOne({
+        let user = await this.repository.findOne({
             where: {
                 username: username
             }
