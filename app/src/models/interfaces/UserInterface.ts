@@ -1,5 +1,6 @@
+import { RoleInterface } from "./RoleInterface";
 
-interface UserInterface {
+export interface UserInterface {
     id: number;
     username: string;
     password: string;
@@ -8,5 +9,5 @@ interface UserInterface {
     email: string;
     country: string;
     image: string;
-    role: number;
+    role: RoleInterface;
 }
