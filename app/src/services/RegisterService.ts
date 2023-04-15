@@ -16,6 +16,11 @@ export class RegisterService implements Service {
         return RegisterService.instance;
     }
 
+    /**
+     * 
+     * @param user New user object to be registered
+     * @returns User object if registration was successful, error message otherwise
+     */
     async register(user: UserModel): Promise<UserModel | ErrorResponse> {
         if (await this.userExists(user.username)) {
             return {
@@ -26,6 +31,11 @@ export class RegisterService implements Service {
         return await this.repository.save(user);
     }
 
+    /**
+     * 
+     * @param username Username of the user
+     * @returns True if the user exists, false otherwise
+     */
     private async userExists(username: string): Promise<boolean> {
         return await this.repository.exist({
             where: {
