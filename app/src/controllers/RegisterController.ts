@@ -35,7 +35,7 @@ export class RegisterController {
             role
         } = req.body;
 
-        const tags = musicalGenres ? await this.MusicGenreService.getMusicGenres(musicalGenres) : [];
+        const tags = musicalGenres ? await this.MusicGenreService.getMusicGenresByName(musicalGenres) : [];
 
         try {
             if (role == "entrepreneur") {

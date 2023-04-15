@@ -15,7 +15,12 @@ export class MusicGenreService implements Service {
         return MusicGenreService.instance;
     }
 
-    async getMusicGenre(name: string) {
+    /**
+     * 
+     * @param name Name of the genre
+     * @returns Genre object if found, null otherwise
+     */
+    async getMusicGenreByName(name: string) {
         return await this.repository.findOne({
             where: {
                 name: name
@@ -23,7 +28,12 @@ export class MusicGenreService implements Service {
         })
     }
 
-    async getMusicGenres(names: string[]): Promise<MusicalGenreModel[]> {
+    /**
+     * 
+     * @param names Array of genre names
+     * @returns Array of genre objects, empty array if none found
+     */
+    async getMusicGenresByName(names: string[]): Promise<MusicalGenreModel[]> {
         return await this.repository.createQueryBuilder("genres")
             .where("genres.name IN (:...names)", { names: names })
             .getMany()
