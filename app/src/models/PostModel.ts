@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { MusicalGenreModel } from "./MusicGenreModel";
 import { UserModel } from "./UserModel";
 import { Tags } from "./interfaces/Tags";
@@ -25,7 +25,7 @@ export class PostModel implements PostInterface {
     @Column("text", { nullable: true, default: null })
     image: string | null;
 
-    @OneToOne(() => UserModel, (entrepreneour) => entrepreneour.id)
+    @ManyToOne(() => UserModel, (entrepreneour) => entrepreneour.id)
     @JoinColumn()
     user: number;
 
@@ -41,7 +41,16 @@ export class PostModel implements PostInterface {
     })
     suscriptions: UserModel[];
 
-    constructor(title: string, subtitle: string, date: Date, body: string, userId: number, musicalGenreId: Tags[], image: string | null = null, suscriptions: UserModel[]) {
+    @Column()
+    country: string;
+
+    @Column()
+    region: string;
+
+    @Column()
+    city: string;
+
+    constructor(title: string, subtitle: string, date: Date, body: string, userId: number, musicalGenreId: Tags[], image: string | null = null, suscriptions: UserModel[], country: string, region: string, city: string) {
         this.title = title;
         this.subtitle = subtitle;
         this.date = date;
@@ -50,5 +59,8 @@ export class PostModel implements PostInterface {
         this.user = userId;
         this.musicalGenres = musicalGenreId;
         this.suscriptions = suscriptions;
+        this.country = country;
+        this.region = region;
+        this.city = city;
     }
 }
