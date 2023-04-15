@@ -15,6 +15,11 @@ export class RoleService implements Service {
         return RoleService.instance;
     }
 
+    /**
+     * 
+     * @param role Name of the role
+     * @returns Role object if found, null otherwise
+     */
     async getRoleByName(role: string): Promise<RoleModel | null> {
         const roleModel = await this.repository.findOne({
             where: {
@@ -25,6 +30,11 @@ export class RoleService implements Service {
         return roleModel != null ? roleModel : null;
     }
 
+    /**
+     * 
+     * @param id Id of the role
+     * @returns Role object if found, null otherwise
+     */
     async getRoleById(id: number): Promise<RoleModel | null> {
         const roleModel = await this.repository.findOne({
             where: {
@@ -35,10 +45,20 @@ export class RoleService implements Service {
         return roleModel || null;
     }
 
+    /**
+     * 
+     * @param role Role object to be created
+     * @returns Role object if creation was successful, null otherwise
+     */
     async createRole(role: RoleModel): Promise<RoleModel> {
         return await this.repository.save(role);
     }
 
+    /**
+     * 
+     * @param id Id of the role to be deleted
+     * @returns True if deletion was successful, false otherwise
+     */
     async deleteRole(id: number): Promise<boolean> {
         const result = await this.repository.delete(id);
 
