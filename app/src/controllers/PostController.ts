@@ -33,6 +33,19 @@ export class PostController {
         return res.status(200).send(posts)
     }
 
+    async getPostById(req: Request, res: Response) {
+        try {
+            let id = parseInt(req.params.id);
+            const post = await this.postService.getPostById(id);
+
+            post ? res.status(200).send(post) : res.status(404).send({ error: 'Post not found' });
+
+        } catch (error) {
+            return res.status(400).send({ error: 'Invalid ID' });
+        }
+
+    }
+
     private thereAreFilters(queryString: any): boolean {
         return this.FILTERS_LIST.some(filter => queryString[filter]);
     }

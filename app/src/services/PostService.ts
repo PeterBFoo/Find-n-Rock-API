@@ -59,4 +59,17 @@ export class PostService implements Service {
             where: filters
         });
     }
+
+    /**
+     * 
+     * @param id Id of the post to be retrieved
+     * @returns Post with the given id, null if none found
+     */
+    async getPostById(id: number): Promise<PostModel | null> {
+        return await this.repository.findOne({
+            where: {
+                id: id
+            }
+        }) || null;
+    }
 }

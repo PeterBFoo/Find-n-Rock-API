@@ -4,6 +4,11 @@ import dataSource from "../db/dataSource";
 import jwt from "jsonwebtoken";
 import envConfig from "../config/DatabaseConfigurationConnection";
 
+const token = jwt.sign({
+    username: "test",
+    password: "test"
+}, envConfig.getSecretKey());
+
 beforeAll(async () => {
     // connect to the database
     if (!dataSource.isInitialized) {
@@ -19,11 +24,6 @@ afterAll(async () => {
 });
 
 describe("GET /api/auth/posts", () => {
-    const token = jwt.sign({
-        username: "test",
-        password: "test"
-    }, envConfig.getSecretKey());
-
     it("Should not get any posts without a token", async () => {
         await request(app)
             .get("/api/auth/posts")
@@ -119,4 +119,40 @@ describe("GET /api/auth/posts", () => {
                 expect(res.body).toHaveLength(0);
             })
     });
-}) 
+})
+
+describe("GET /api/auth/posts/:id", () => {
+    it("Should get a post by id", async () => {
+        await request(app)
+            .get("/api/auth/posts/1")
+            .set("Cookie", [`auth-token=${token}`])
+            .expect(200)
+            .then((res) => {
+                expect(res.body).toHaveProperty("id", 1);
+            })
+    });
+
+    it("Should return an error given a not existing post id", async () => {
+        await request(app)
+            .get("/api/auth/posts/91")
+            .set("Cookie", [`auth-token=${token}`])
+            .expect(404)
+            .then((res) => {
+                expect(res.body).toEqual({
+                    "error": "Post not found"
+                });
+            })
+    })
+
+    it("Should return an error given a not valid post id", async () => {
+        await request(app)
+            .get("/api/auth/posts/abc")
+            .set("Cookie", [`auth-token=${token}`])
+            .expect(400)
+            .then((res) => {
+                expect(res.body).toEqual({
+                    "error": "Invalid ID"
+                });
+            })
+    })
+})
