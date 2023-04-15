@@ -4,12 +4,15 @@ import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import { LoggedUser } from './src/middleware/LoggedUser.middleware';
+const loggedUserMiddleware = new LoggedUser().rejectIfNotLoggedIn;
 
 // ROUTES //
 import login from './src/routes/LoginRoute';
 import register from './src/routes/RegisterRoute';
+import post from './src/routes/PostRoute';
 const noAuthRoutes = [login, register]
-const authRoutes = []
+const authRoutes = [post]
 
 // DB //
 import envConfig from './src/config/DatabaseConfigurationConnection';
@@ -24,6 +27,8 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api", noAuthRoutes);
+app.use("/api/auth", loggedUserMiddleware)
+app.use("/api/auth", authRoutes);
 
 if (envConfig.NODE_ENV != "test") {
     app.use(morgan('dev'));
