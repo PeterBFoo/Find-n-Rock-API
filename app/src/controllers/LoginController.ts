@@ -23,7 +23,7 @@ export class LoginController {
             return res.status(401).send(result.error);
         }
 
-        return res.cookie("auth-token", result.token).send(result.user);
+        return res.cookie("auth-token", result.token).send(result);
     }
 
     async logout(req: Request, res: Response) {
