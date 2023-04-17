@@ -1,16 +1,14 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import envConfig from '../config/DatabaseConfigurationConnection';
-import connection from '../db/dataSource';
-import { Service } from './interfaces/Service';
 import { LoginResponse } from './types/LoginTypes';
 import { ErrorResponse } from './types/CommonTypes';
-import { UserModel } from '../models/UserModel';
-import { Repository } from 'typeorm';
+import { UserService } from './UserService';
+import { Request } from 'express';
 
-export class LoginService implements Service {
+export class LoginService {
     private static instance: LoginService;
-    repository: Repository<UserModel> = connection.getRepository(UserModel);
+    private userService: UserService = UserService.getInstance();
 
     private constructor() { }
 
@@ -20,21 +18,6 @@ export class LoginService implements Service {
         }
 
         return LoginService.instance;
-    }
-
-    /**
-     * 
-     * @param username Username of the user
-     * @returns User object if found, null otherwise
-     */
-    private async getUser(username: string): Promise<UserModel | null> {
-        let user = await this.repository.findOne({
-            where: {
-                username: username
-            }
-        });
-
-        return user || null;
     }
 
     /**
@@ -62,12 +45,22 @@ export class LoginService implements Service {
 
     /**
      * 
+     * @param req Express request object
+     * @returns User object if the token is valid, null otherwise
+     */
+    getUserInRequest(req: Request): any {
+        return jwt.decode(req.cookies["auth-token"]);
+    }
+
+
+    /**
+     * 
      * @param username Username of the user
      * @param incomingPassword Password of the user
      * @returns LoginResponse object containing a JWT token and the user object if the login was successful, ErrorResponse object otherwise
      */
     async login(username: string, incomingPassword: string): Promise<LoginResponse | ErrorResponse> {
-        const user = await this.getUser(username);
+        const user = await this.userService.getUser(username);
 
         if (user) {
             let validPassword = this.comparePassword(incomingPassword, user.password);
