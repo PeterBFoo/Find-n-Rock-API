@@ -7,8 +7,17 @@ router.get('/posts', async (req: Request, res: Response) => {
     postController.getPosts(req, res);
 });
 
-router.get('/posts/:id', async (req: Request, res: Response) => {
+router.get('/posts/:username', async (req: Request, res: Response) => {
+    postController.getPostsOfUser(req, res);
+})
+
+router.get('/post/:id', async (req: Request, res: Response) => {
     postController.getPostById(req, res);
+});
+
+
+router.post("/posts/create", async (req: Request, res: Response) => {
+    postController.createPost(req, res);
 });
 
 export default router;

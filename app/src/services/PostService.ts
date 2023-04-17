@@ -3,6 +3,7 @@ import { PostModel } from "../models/PostModel";
 import { MusicGenreService } from "./MusicGenreService";
 import { Repository } from 'typeorm';
 import { Service } from "./interfaces/Service";
+import { UserModel } from "../models/UserModel";
 
 export class PostService implements Service {
     private static instance: PostService;
@@ -71,5 +72,25 @@ export class PostService implements Service {
                 id: id
             }
         }) || null;
+    }
+
+    /**
+     * 
+     * @param user User object
+     * @returns Posts of the input user
+     */
+    async getPostsOfUser(user: UserModel) {
+        return await this.repository.createQueryBuilder('post')
+            .andWhere('post.user = :id', { id: user.id })
+            .getMany();
+    }
+
+    /**
+     * 
+     * @param post Post to be created
+     * @returns The created post
+     */
+    async createPost(post: PostModel) {
+        return await this.repository.save(post);
     }
 }

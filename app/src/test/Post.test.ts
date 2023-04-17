@@ -5,8 +5,12 @@ import jwt from "jsonwebtoken";
 import envConfig from "../config/DatabaseConfigurationConnection";
 
 const token = jwt.sign({
-    username: "test",
-    password: "test"
+    username: "user_test",
+    password: "password",
+    role: {
+        canManagePosts: true
+    },
+    id: 1
 }, envConfig.getSecretKey());
 
 beforeAll(async () => {
@@ -121,10 +125,10 @@ describe("GET /api/auth/posts", () => {
     });
 })
 
-describe("GET /api/auth/posts/:id", () => {
+describe("GET /api/auth/post/:id", () => {
     it("Should get a post by id", async () => {
         await request(app)
-            .get("/api/auth/posts/1")
+            .get("/api/auth/post/1")
             .set("Cookie", [`auth-token=${token}`])
             .expect(200)
             .then((res) => {
@@ -134,7 +138,7 @@ describe("GET /api/auth/posts/:id", () => {
 
     it("Should return an error given a not existing post id", async () => {
         await request(app)
-            .get("/api/auth/posts/91")
+            .get("/api/auth/post/91")
             .set("Cookie", [`auth-token=${token}`])
             .expect(404)
             .then((res) => {
@@ -146,7 +150,7 @@ describe("GET /api/auth/posts/:id", () => {
 
     it("Should return an error given a not valid post id", async () => {
         await request(app)
-            .get("/api/auth/posts/abc")
+            .get("/api/auth/post/abc")
             .set("Cookie", [`auth-token=${token}`])
             .expect(400)
             .then((res) => {
@@ -155,4 +159,95 @@ describe("GET /api/auth/posts/:id", () => {
                 });
             })
     })
+})
+
+describe("GET /api/auth/posts/:username", () => {
+    it("Should get all the posts of the user 'user_test'", async () => {
+        await request(app)
+            .get("/api/auth/posts/user_test")
+            .set("Cookie", [`auth-token=${token}`])
+            .expect(200)
+            .then((res) => {
+                expect(res.body.length).toBeGreaterThan(0);
+            })
+    });
+
+    it("Should get any posts of the user 'user_without_posts'", async () => {
+        await request(app)
+            .get("/api/auth/posts/user_without_posts")
+            .set("Cookie", [`auth-token=${token}`])
+            .expect(200)
+            .then((res) => {
+                expect(res.body.length).toEqual(0);
+            })
+    });
+
+    it("Should respond with 404 because user doesn't exist", async () => {
+        await request(app)
+            .get("/api/auth/posts/nonexisting_user")
+            .set("Cookie", [`auth-token=${token}`])
+            .expect(404);
+    });
+})
+
+describe("POST /api/auth/posts/create", () => {
+    it("Should get create a new post", async () => {
+        let userToken = await request(app)
+            .post("/api/login")
+            .send({
+                username: "user_test",
+                password: "password"
+            })
+            .expect(200)
+            .then((res) => {
+                return res.body.token
+            });
+
+        await request(app)
+            .post("/api/auth/posts/create")
+            .set("Cookie", [`auth-token=${userToken}`])
+            .send({
+                title: "New post",
+                subtitle: "Subtitle post",
+                body: "This is a test post",
+                image: "https://test.com",
+                genres: [
+                    "Blues"
+                ],
+                country: "Spain",
+                region: "Balearic Islands",
+                city: "Alcudia"
+            })
+            .expect(201)
+    });
+
+    it("Should not create a new post because user is a musical group", async () => {
+        let userToken = await request(app)
+            .post("/api/login")
+            .send({
+                username: "username2",
+                password: "password2"
+            })
+            .expect(200)
+            .then((res) => {
+                return res.body.token
+            });
+
+        await request(app)
+            .post("/api/auth/posts/create")
+            .set("Cookie", [`auth-token=${userToken}`])
+            .send({
+                title: "New post",
+                subtitle: "Subtitle post",
+                body: "This is a test post",
+                image: "https://test.com",
+                genres: [
+                    "Blues"
+                ],
+                country: "Spain",
+                region: "Balearic Islands",
+                city: "Alcudia"
+            })
+            .expect(401)
+    });
 })

@@ -6,7 +6,6 @@ import { PostInterface } from "./interfaces/PostInterface";
 
 @Entity("Post")
 export class PostModel implements PostInterface {
-
     @PrimaryGeneratedColumn()
     id!: number;
 
@@ -17,10 +16,10 @@ export class PostModel implements PostInterface {
     subtitle: string;
 
     @Column()
-    date: Date;
+    body: string;
 
     @Column()
-    body: string;
+    date: Date;
 
     @Column("text", { nullable: true, default: null })
     image: string | null;
@@ -50,17 +49,32 @@ export class PostModel implements PostInterface {
     @Column()
     city: string;
 
-    constructor(title: string, subtitle: string, date: Date, body: string, userId: number, musicalGenreId: Tags[], image: string | null = null, suscriptions: UserModel[], country: string, region: string, city: string) {
+    constructor(title: string, subtitle: string, date: Date, body: string, userId: number, genres: Tags[], image: string | null = null, suscriptions: UserModel[], country: string, region: string, city: string) {
         this.title = title;
         this.subtitle = subtitle;
         this.date = date;
         this.body = body;
         this.image = image;
         this.user = userId;
-        this.musicalGenres = musicalGenreId;
+        this.musicalGenres = genres;
         this.suscriptions = suscriptions;
         this.country = country;
         this.region = region;
         this.city = city;
+    }
+
+    static getMandatoryFieldsFor(): string[] {
+        return ['title', 'subtitle', 'body', 'genres', 'country', 'region', 'city'];
+    }
+
+    static isValid(post: any): boolean {
+        const mandatoryFields = this.getMandatoryFieldsFor();
+        for (const field of mandatoryFields) {
+            if (!post[field] || post[field] === '') {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
