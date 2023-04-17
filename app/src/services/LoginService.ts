@@ -3,12 +3,13 @@ import jwt from 'jsonwebtoken';
 import envConfig from '../config/DatabaseConfigurationConnection';
 import { LoginResponse } from './types/LoginTypes';
 import { ErrorResponse } from './types/CommonTypes';
-import { UserService } from './UserService';
 import { Request } from 'express';
+import { ExtendedService } from './interfaces/ExtendedService';
+import { UserService } from './UserService';
 
-export class LoginService {
+export class LoginService implements ExtendedService {
     private static instance: LoginService;
-    private userService: UserService = UserService.getInstance();
+    externalService: UserService = UserService.getInstance();
 
     private constructor() { }
 
@@ -60,7 +61,7 @@ export class LoginService {
      * @returns LoginResponse object containing a JWT token and the user object if the login was successful, ErrorResponse object otherwise
      */
     async login(username: string, incomingPassword: string): Promise<LoginResponse | ErrorResponse> {
-        const user = await this.userService.getUser(username);
+        const user = await this.externalService.getUser(username);
 
         if (user) {
             let validPassword = this.comparePassword(incomingPassword, user.password);
