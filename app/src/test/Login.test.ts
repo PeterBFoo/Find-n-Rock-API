@@ -19,7 +19,7 @@ describe("POST /login", () => {
         await request(app)
             .post("/api/login")
             .send({
-                username: "username",
+                username: "user_test",
                 password: "password"
             })
             .expect(200)
@@ -50,7 +50,7 @@ describe("POST /login", () => {
         const response = await request(app)
             .post("/api/login")
             .send({
-                username: "username",
+                username: "user_test",
                 password: "password"
             })
             .expect(200);

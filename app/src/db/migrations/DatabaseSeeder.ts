@@ -20,16 +20,18 @@ export class DataBaseSeeder implements MigrationInterface {
 
         await this.roleRepository.save([entrepreneourRole, musicalGroupRole, adminRole]);
 
-        let entrepreneourUser = new UserModel("username", "password", "Entrepreneour test", "Description test", "test@test.com", "https://www.testimage.com", "Avda Test 2", "Spain", entrepreneourRole, "123456789")
+        let entrepreneourUser = new UserModel("user_test", "password", "Entrepreneour test", "Description test", "test@test.com", "https://www.testimage.com", "Avda Test 2", "Spain", entrepreneourRole, "123456789")
 
-        await this.userRepository.save(entrepreneourUser);
+        let entrepreneourUser2 = new UserModel("user_without_posts", "password", "Entrepreneour test", "Description test", "test2@test.com", "https://www.testimage.com", "Avda Test 2", "Spain", entrepreneourRole, "123456789")
+
+        await this.userRepository.save([entrepreneourUser, entrepreneourUser2]);
 
         let rock = new MusicalGenreModel("Rock");
         let blues = new MusicalGenreModel("Blues");
 
         await this.musicalGenreRepository.save([rock, blues])
 
-        let musicalGroupUser = new UserModel("username2", "password2", "Musical group test", "Description test", "test2@test.com", "https://www.testimage.com", "Avda Test 2", "Spain", musicalGroupRole, "123456789", 4, [rock, blues])
+        let musicalGroupUser = new UserModel("username2", "password2", "Musical group test", "Description test", "test3@test.com", "https://www.testimage.com", "Avda Test 2", "Spain", musicalGroupRole, "123456789", 4, [rock, blues])
 
         await this.userRepository.save(musicalGroupUser);
 
