@@ -4,6 +4,7 @@ import { LoginService } from '../services/LoginService';
 import { PostModel } from '../models/PostModel';
 import { MusicGenreService } from '../services/MusicGenreService';
 import { UserService } from '../services/UserService';
+import { UserModel } from '../models/UserModel';
 
 type AvailableFilters = {
     country?: string,
@@ -31,7 +32,7 @@ export class PostController {
     }
 
     async getPosts(req: Request, res: Response) {
-        if (this.thereAreFilters(req.query)) {
+        if (this.areThereFilters(req.query)) {
             let filters = this.getFiltersOf(req.query)
             const posts = await this.postService.getFilteredPosts(filters);
             return res.status(200).send(posts);
@@ -68,7 +69,7 @@ export class PostController {
             const user = await this.loginService.getUserInRequest(req);
 
             if (user.role.canManagePosts) {
-                if (PostModel.isValid(req.body)) {
+                if (PostModel.isValidPost(req.body)) {
                     const {
                         title,
                         subtitle,
@@ -99,7 +100,46 @@ export class PostController {
         }
     }
 
-    private thereAreFilters(queryString: any): boolean {
+    async editPost(req: Request, res: Response) {
+        try {
+            const postId = parseInt(req.params.postId);
+            const user: UserModel = await this.loginService.getUserInRequest(req);
+            const post: any = await this.postService.getPostById(postId);
+
+            if (post == null) return res.status(404).send("Post not found")
+
+            if (this.isPostOwner(user, post)) {
+                if (!this.areGenresValid(req.body.musicalGenres)) {
+                    return res.status(400).send("Some genres are invalid")
+                }
+
+                PostModel.getEditableFields().forEach((key) => {
+                    let value = req.body[key];
+                    if (value != post[key] && value != undefined) {
+                        post[key] = value;
+                    }
+                })
+
+                const response = await this.postService.updatePost(post);
+                return res.status(200).send(response);
+            } else {
+                return res.status(401).send("Only the post owner can update this post")
+            }
+        } catch (e) {
+            return res.status(500).send(e);
+        }
+    }
+
+    private async areGenresValid(genres: string[]): Promise<boolean> {
+        if (genres?.length > 0) {
+            let response = await this.musicGenreService.getMusicGenresByName(genres);
+            return response.length != genres.length
+        }
+
+        return true;
+    }
+
+    private areThereFilters(queryString: any): boolean {
         return this.FILTERS_LIST.some(filter => queryString[filter]);
     }
 
@@ -110,5 +150,9 @@ export class PostController {
             city: queryString.city,
             genres: queryString.genres ? queryString.genres.split(',') : undefined
         };
+    }
+
+    private isPostOwner(user: UserModel, post: any) {
+        return user.role.canManagePosts && post?.user.id == user.id
     }
 }

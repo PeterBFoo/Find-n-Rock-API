@@ -8,5 +8,5 @@ export interface PostInterface {
     date: Date;
     image: string | null;
     user: number;
-    musicalGenres: Tags[];
+    genres: Tags[];
 }

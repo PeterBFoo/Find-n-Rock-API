@@ -32,7 +32,7 @@ export class PostModel implements PostInterface {
     @JoinTable({
         name: "MusicalGenres_Posts",
     })
-    musicalGenres: Tags[];
+    genres: Tags[];
 
     @ManyToMany(() => UserModel, (group) => group.id, { onDelete: "CASCADE" })
     @JoinTable({
@@ -56,19 +56,23 @@ export class PostModel implements PostInterface {
         this.body = body;
         this.image = image;
         this.user = userId;
-        this.musicalGenres = genres;
+        this.genres = genres;
         this.suscriptions = suscriptions;
         this.country = country;
         this.region = region;
         this.city = city;
     }
 
-    static getMandatoryFieldsFor(): string[] {
+    static getEditableFields(): string[] {
+        return ['title', 'subtitle', 'body', 'genres', 'image', 'country', 'region', 'city']
+    }
+
+    static getMandatoryFields(): string[] {
         return ['title', 'subtitle', 'body', 'genres', 'country', 'region', 'city'];
     }
 
-    static isValid(post: any): boolean {
-        const mandatoryFields = this.getMandatoryFieldsFor();
+    static isValidPost(post: any): boolean {
+        const mandatoryFields = this.getMandatoryFields();
         for (const field of mandatoryFields) {
             if (!post[field] || post[field] === '') {
                 return false;

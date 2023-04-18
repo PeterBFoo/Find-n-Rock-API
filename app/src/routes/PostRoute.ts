@@ -15,9 +15,12 @@ router.get('/post/:id', async (req: Request, res: Response) => {
     postController.getPostById(req, res);
 });
 
-
 router.post("/posts/create", async (req: Request, res: Response) => {
     postController.createPost(req, res);
 });
+
+router.post("/posts/edit/:postId", async (req: Request, res: Response) => {
+    postController.editPost(req, res);
+})
 
 export default router;
