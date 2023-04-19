@@ -23,4 +23,8 @@ router.post("/posts/edit/:postId", async (req: Request, res: Response) => {
     postController.editPost(req, res);
 })
 
+router.post("/posts/delete/:postId", async (req: Request, res: Response) => {
+    postController.deletePost(req, res);
+})
+
 export default router;

@@ -105,4 +105,8 @@ export class PostService implements Service {
     async updatePost(post: PostInterface) {
         return await this.repository.save(post);
     }
+
+    async deletePost(post: PostModel) {
+        return await this.repository.remove(post);
+    }
 }

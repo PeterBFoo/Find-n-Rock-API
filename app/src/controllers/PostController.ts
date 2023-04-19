@@ -130,6 +130,25 @@ export class PostController {
         }
     }
 
+    async deletePost(req: Request, res: Response) {
+        try {
+            const postId = parseInt(req.params.postId);
+            const user: UserModel = await this.loginService.getUserInRequest(req);
+            const post: any = await this.postService.getPostById(postId);
+
+            if (post == null) return res.status(404).send("Post not found")
+
+            if (this.isPostOwner(user, post)) {
+                const response = await this.postService.deletePost(post);
+                return res.status(200).send(response);
+            } else {
+                return res.status(401).send("Only the post owner can delete this post")
+            }
+        } catch (e) {
+            return res.status(500).send(e);
+        }
+    }
+
     private async areGenresValid(genres: string[]): Promise<boolean> {
         if (genres?.length > 0) {
             let response = await this.musicGenreService.getMusicGenresByName(genres);
