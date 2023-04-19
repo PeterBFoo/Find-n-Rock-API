@@ -1,6 +1,6 @@
-import app from "../../app";
+import app from "../../../app";
 import request from "supertest";
-import dataSource from "../db/dataSource";
+import dataSource from "../../db/dataSource";
 
 beforeAll(async () => {
     // connect to the database
