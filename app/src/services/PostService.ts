@@ -103,7 +103,6 @@ export class PostService implements Service {
     }
 
     async updatePost(post: PostInterface) {
-        if (post.genres)
-            return await this.repository.save(post);
+        return await this.repository.save(post);
     }
 }
