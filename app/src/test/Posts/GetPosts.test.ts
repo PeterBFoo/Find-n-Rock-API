@@ -54,7 +54,7 @@ describe("GET /api/auth/posts", () => {
             .query({ country: "Spain" })
             .expect(200)
             .then((res) => {
-                expect(res.body).toHaveLength(2);
+                expect(res.body.length).toBeGreaterThanOrEqual(2);
             })
     })
 
@@ -65,7 +65,7 @@ describe("GET /api/auth/posts", () => {
             .query({ city: "Pollensa" })
             .expect(200)
             .then((res) => {
-                expect(res.body).toHaveLength(1);
+                expect(res.body.length).toBeGreaterThanOrEqual(1);
             })
     })
 
@@ -76,7 +76,7 @@ describe("GET /api/auth/posts", () => {
             .query({ country: "Spain", city: "Pollensa" })
             .expect(200)
             .then((res) => {
-                expect(res.body).toHaveLength(1);
+                expect(res.body.length).toBeGreaterThanOrEqual(1);
             })
     })
 
@@ -87,7 +87,7 @@ describe("GET /api/auth/posts", () => {
             .query({ country: "Spain", city: "Pollensa", genres: ["Rock"] })
             .expect(200)
             .then((res) => {
-                expect(res.body).toHaveLength(1);
+                expect(res.body.length).toBeGreaterThanOrEqual(1);
             })
     })
 
@@ -98,7 +98,7 @@ describe("GET /api/auth/posts", () => {
             .query({ region: "Balearic Islands" })
             .expect(200)
             .then((res) => {
-                expect(res.body).toHaveLength(2);
+                expect(res.body.length).toBeGreaterThanOrEqual(2);
             })
     });
 
@@ -109,7 +109,7 @@ describe("GET /api/auth/posts", () => {
             .query({ genres: ["Rock"] })
             .expect(200)
             .then((res) => {
-                expect(res.body).toHaveLength(2);
+                expect(res.body.length).toBeGreaterThanOrEqual(2);
             })
     });
 

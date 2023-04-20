@@ -73,7 +73,7 @@ export class PostService implements Service {
      * @param id Id of the post to be retrieved
      * @returns Post with the given id, null if none found
      */
-    async getPostById(id: number): Promise<PostInterface | null> {
+    async getPostById(id: number): Promise<PostModel | null> {
         return await this.repository.findOne({
             where: {
                 id: id

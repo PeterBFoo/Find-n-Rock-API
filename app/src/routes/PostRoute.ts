@@ -27,4 +27,8 @@ router.post("/posts/delete/:postId", async (req: Request, res: Response) => {
     postController.deletePost(req, res);
 })
 
+router.post("/posts/suscribe/:postId", async (req: Request, res: Response) => {
+    postController.suscribeToPost(req, res);
+})
+
 export default router;

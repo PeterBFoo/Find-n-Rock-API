@@ -149,6 +149,31 @@ export class PostController {
         }
     }
 
+    async suscribeToPost(req: Request, res: Response) {
+        try {
+            const postId = parseInt(req.params.postId);
+            const user: UserModel = await this.loginService.getUserInRequest(req);
+            const post: any = await this.postService.getPostById(postId);
+
+            if (post == null) return res.status(404).send("Post not found")
+
+            if (this.canSuscribeToPosts(user)) {
+                if (this.isAlreadySuscribed(user, post)) {
+                    return res.status(400).send("You are already suscribed to this post")
+                }
+
+                post.suscriptions.push(user);
+                const response = await this.postService.updatePost(post);
+                return res.status(200).send(response);
+            } else {
+                return res.status(401).send("You are not allowed to suscribe to any posts")
+            }
+
+        } catch (e) {
+            return res.status(500).send(e);
+        }
+    }
+
     private async areGenresValid(genres: string[]): Promise<boolean> {
         if (genres?.length > 0) {
             let response = await this.musicGenreService.getMusicGenresByName(genres);
@@ -169,6 +194,14 @@ export class PostController {
             city: queryString.city,
             genres: queryString.genres ? queryString.genres.split(',') : undefined
         };
+    }
+
+    private isAlreadySuscribed(user: UserModel, post: any) {
+        return post.suscriptions.some((suscription: any) => suscription.id == user.id);
+    }
+
+    private canSuscribeToPosts(user: UserModel) {
+        return user.role.canSubscribe;
     }
 
     private isPostOwner(user: UserModel, post: any) {
