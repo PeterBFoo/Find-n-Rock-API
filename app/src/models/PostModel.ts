@@ -52,7 +52,13 @@ export class PostModel implements PostInterface {
     @Column()
     active: boolean
 
-    constructor(title: string, subtitle: string, date: Date, body: string, userId: number, genres: Tags[], image: string | null = null, suscriptions: UserModel[], country: string, region: string, city: string) {
+    @ManyToMany(() => UserModel, (group) => group.id, { onDelete: "CASCADE" })
+    @JoinTable({
+        name: "SelectedCandidates",
+    })
+    selectedCandidates: UserModel[];
+
+    constructor(title: string, subtitle: string, date: Date, body: string, userId: number, genres: Tags[], image: string | null = null, suscriptions: UserModel[], selectedCandidates: UserModel[], country: string, region: string, city: string) {
         this.title = title;
         this.subtitle = subtitle;
         this.date = date;
@@ -61,6 +67,7 @@ export class PostModel implements PostInterface {
         this.user = userId;
         this.genres = genres;
         this.suscriptions = suscriptions;
+        this.selectedCandidates = selectedCandidates;
         this.country = country;
         this.region = region;
         this.city = city;

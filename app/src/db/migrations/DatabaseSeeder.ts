@@ -36,8 +36,8 @@ export class DataBaseSeeder implements MigrationInterface {
         await this.userRepository.save([entrepreneourUser, entrepreneourUser2, musicalGroupUser, admin]);
 
         // posts
-        let post = new PostModel("Post test", "Subtitle post test", new Date(), "Body post test", this.userRepository.getId(entrepreneourUser), [rock], "https://www.testimage.com", [], "Spain", "Balearic Islands", "Alcudia")
-        let post2 = new PostModel("Post test", "Subtitle post test", new Date(), "Body post test", this.userRepository.getId(entrepreneourUser), [rock, blues], "https://www.testimage.com", [], "Spain", "Balearic Islands", "Pollensa")
+        let post = new PostModel("Post test", "Subtitle post test", new Date(), "Body post test", this.userRepository.getId(entrepreneourUser), [rock], "https://www.testimage.com", [], [], "Spain", "Balearic Islands", "Alcudia")
+        let post2 = new PostModel("Post test", "Subtitle post test", new Date(), "Body post test", this.userRepository.getId(entrepreneourUser), [rock, blues], "https://www.testimage.com", [], [], "Spain", "Balearic Islands", "Pollensa")
 
         await this.postRepository.save([post, post2]);
         await this.closeConnection();
