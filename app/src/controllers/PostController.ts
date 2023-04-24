@@ -56,7 +56,7 @@ export class PostController {
     }
 
     async getPostsOfUser(req: Request, res: Response) {
-        const user = await this.userService.getUser(req.params.username);
+        const user = await this.userService.getUserByUsername(req.params.username);
         if (user) {
             const posts = await this.postService.getPostsOfUser(user);
             res.status(200).send(posts);
@@ -83,11 +83,9 @@ export class PostController {
                     } = req.body;
 
                     const musicGenres = genres.length > 0 ? await this.musicGenreService.getMusicGenresByName(genres) : [];
-
-                    let newPost = new PostModel(title, subtitle, new Date(), body, user.id, musicGenres, image, [], country, region, city);
+                    let newPost = new PostModel(title, subtitle, new Date(), body, user.id, musicGenres, image, [], [], country, region, city);
 
                     const response = await this.postService.createPost(newPost);
-
                     return response ? res.status(201).send(response) : res.status(500).send({ error: Constants.GENERAL_ERROR });
                 } else {
                     return res.status(400).send({ error: Constants.BAD_REQUEST });
@@ -164,8 +162,7 @@ export class PostController {
                     return res.status(400).send(Constants.POSTS_SUSCRIBE_ALREADY_SUSCRIBED)
                 }
 
-                post.suscriptions.push(user);
-                const response = await this.postService.updatePost(post);
+                const response = await this.postService.suscribeToPost(post, user);
                 return res.status(200).send(response);
             } else {
                 return res.status(401).send(Constants.POSTS_SUSCRIBE_NOT_ALLOWED)
@@ -193,20 +190,41 @@ export class PostController {
                 return res.status(400).send(Constants.POSTS_UNSUSCRIBE_ALREADY_UNSUSCRIBED)
             }
 
-            let postIndex = post.suscriptions
-                .map((suscription: UserModel, i: number) => {
-                    if (suscription.id == user.id) {
-                        return i;
-                    }
-                });
-
-            delete post.suscriptions[postIndex]
-            const response = await this.postService.updatePost(post);
+            const response = await this.postService.unsuscribeToPost(post, user);
             return response ? res.status(200).send(Constants.POSTS_UNSUSCRIBE_OK) :
                 res.status(500).send(Constants.POSTS_UNSUSCRIBE_ERROR)
 
         } catch (e) {
             return res.status(500).send(e);
+        }
+    }
+
+    async chooseCandidatesOfPost(req: Request, res: Response) {
+        const postId = parseInt(req.params.postId);
+        const post: PostModel | null = await this.postService.getPostById(postId);
+
+        if (post == null) return res.status(404).send(Constants.POSTS_NOT_FOUND)
+
+        const postOwner: UserModel = await this.loginService.getUserInRequest(req);
+
+        if (!this.isPostOwner(postOwner, post)) return res.status(401).send(Constants.POSTS_CHOOSE_NOT_ALLOWED)
+
+        let candidatesInRequest = req.body;
+        let candidates = [];
+
+        for (let i = 0; i < candidatesInRequest.length; i++) {
+            const user = post.suscriptions.find(suscription => suscription.username == candidatesInRequest[i])
+            if (user) {
+                candidates.push(user)
+            }
+        }
+
+        if (candidates.length > 0) {
+            const response = await this.postService.selectCandidates(post, candidates)
+            return response ? res.status(200).send(post.selectedCandidates) : res.status(500).send(response)
+
+        } else {
+            return res.status(400).send(Constants.POSTS_CHOOSE_INVALID_USERS)
         }
     }
 

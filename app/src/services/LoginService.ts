@@ -61,7 +61,7 @@ export class LoginService implements ExtendedService {
      * @returns LoginResponse object containing a JWT token and the user object if the login was successful, ErrorResponse object otherwise
      */
     async login(username: string, incomingPassword: string): Promise<LoginResponse | ErrorResponse> {
-        const user = await this.externalService.getUser(username);
+        const user = await this.externalService.getUserByUsername(username);
 
         if (user) {
             let validPassword = this.comparePassword(incomingPassword, user.password);

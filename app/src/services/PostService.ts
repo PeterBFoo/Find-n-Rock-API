@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { Service } from "./interfaces/Service";
 import { UserInterface } from "../models/interfaces/UserInterface";
 import { PostInterface } from "../models/interfaces/PostInterface";
+import { UserModel } from "../models/UserModel";
 
 export class PostService implements Service {
     private static instance: PostService;
@@ -113,6 +114,27 @@ export class PostService implements Service {
 
     async deletePost(post: PostModel) {
         post.active = false;
+        return await this.repository.save(post);
+    }
+
+    async suscribeToPost(post: PostModel, user: UserModel) {
+        post.suscriptions.push(user);
+        return await this.repository.save(post);
+    }
+
+    async unsuscribeToPost(post: PostModel, user: UserModel) {
+        for (let i = 0; i < post.suscriptions.length; i++) {
+            if (post.suscriptions[i].id == user.id) {
+                delete post.suscriptions[i];
+            }
+        }
+        return await this.repository.save(post);
+    }
+
+    async selectCandidates(post: PostModel, candidates: UserModel[]): Promise<PostModel> {
+        post.active = false;
+        post.selectedCandidates = candidates;
+
         return await this.repository.save(post);
     }
 }

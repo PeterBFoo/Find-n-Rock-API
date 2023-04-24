@@ -10,6 +10,8 @@ export enum Constants {
     POSTS_CREATE_NOT_ALLOWED = 'Not allowed to create posts, only entrepreneours can create posts',
     POSTS_EDIT_NOT_ALLOWED = "Only the post owner can update this post",
     POSTS_DELETE_NOT_ALLOWED = "Only the post owner can delete this post",
+    POSTS_CHOOSE_NOT_ALLOWED = "Only the post owner can choose candidates of the post",
+    POSTS_CHOOSE_INVALID_USERS = "You didnt select any valid user to candidate, make sure that the users you select are suscribed",
     GENRES_INVALID = "Some of the genres requested does not exist",
     USER_NOT_FOUND = "User not found",
     GENERAL_ERROR = "Something went wrong, please try later",

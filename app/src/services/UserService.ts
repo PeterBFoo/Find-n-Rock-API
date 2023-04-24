@@ -22,7 +22,7 @@ export class UserService implements Service {
      * @param username Username of the user
      * @returns User object if found, null otherwise
      */
-    async getUser(username: string): Promise<UserModel | null> {
+    async getUserByUsername(username: string): Promise<UserModel | null> {
         return await this.repository.findOne({
             where: {
                 username: username
