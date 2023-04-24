@@ -5,6 +5,7 @@ import { PostModel } from '../models/PostModel';
 import { MusicGenreService } from '../services/MusicGenreService';
 import { UserService } from '../services/UserService';
 import { UserModel } from '../models/UserModel';
+import { Constants } from '../static/Constants';
 
 type AvailableFilters = {
     country?: string,
@@ -47,7 +48,7 @@ export class PostController {
             let id = parseInt(req.params.id);
             const post = await this.postService.getPostById(id);
 
-            post ? res.status(200).send(post) : res.status(404).send({ error: 'Post not found' });
+            post ? res.status(200).send(post) : res.status(404).send({ error: Constants.POSTS_NOT_FOUND });
 
         } catch (error) {
             return res.status(400).send({ error: 'Invalid ID' });
@@ -60,7 +61,7 @@ export class PostController {
             const posts = await this.postService.getPostsOfUser(user);
             res.status(200).send(posts);
         } else {
-            res.status(404).send("User not found");
+            res.status(404).send(Constants.USER_NOT_FOUND);
         }
     }
 
@@ -87,12 +88,12 @@ export class PostController {
 
                     const response = await this.postService.createPost(newPost);
 
-                    return response ? res.status(201).send(response) : res.status(500).send({ error: 'Something went wrong' });
+                    return response ? res.status(201).send(response) : res.status(500).send({ error: Constants.GENERAL_ERROR });
                 } else {
-                    return res.status(400).send({ error: 'Invalid data' });
+                    return res.status(400).send({ error: Constants.BAD_REQUEST });
                 }
             } else {
-                return res.status(401).send({ error: 'Not allowed to create posts, only entrepreneours can create posts', user: user });
+                return res.status(401).send({ error: Constants.POSTS_CREATE_NOT_ALLOWED, user: user });
             }
 
         } catch (error: any) {
@@ -106,11 +107,11 @@ export class PostController {
             const user: UserModel = await this.loginService.getUserInRequest(req);
             const post: any = await this.postService.getPostById(postId);
 
-            if (post == null) return res.status(404).send("Post not found")
+            if (post == null) return res.status(404).send(Constants.POSTS_NOT_FOUND)
 
             if (this.isPostOwner(user, post)) {
                 if (!this.areGenresValid(req.body.musicalGenres)) {
-                    return res.status(400).send("Some genres are invalid")
+                    return res.status(400).send(Constants.GENRES_INVALID)
                 }
 
                 PostModel.getEditableFields().forEach((key) => {
@@ -123,7 +124,7 @@ export class PostController {
                 const response = await this.postService.updatePost(post);
                 return res.status(200).send(response);
             } else {
-                return res.status(401).send("Only the post owner can update this post")
+                return res.status(401).send(Constants.POSTS_EDIT_NOT_ALLOWED)
             }
         } catch (e) {
             return res.status(500).send(e);
@@ -136,13 +137,13 @@ export class PostController {
             const user: UserModel = await this.loginService.getUserInRequest(req);
             const post: any = await this.postService.getPostById(postId);
 
-            if (post == null) return res.status(404).send("Post not found")
+            if (post == null) return res.status(404).send(Constants.POSTS_NOT_FOUND)
 
             if (this.isPostOwner(user, post)) {
                 const response = await this.postService.deletePost(post);
                 return res.status(200).send(response);
             } else {
-                return res.status(401).send("Only the post owner can delete this post")
+                return res.status(401).send(Constants.POSTS_DELETE_NOT_ALLOWED)
             }
         } catch (e) {
             return res.status(500).send(e);
@@ -152,22 +153,57 @@ export class PostController {
     async suscribeToPost(req: Request, res: Response) {
         try {
             const postId = parseInt(req.params.postId);
-            const user: UserModel = await this.loginService.getUserInRequest(req);
             const post: any = await this.postService.getPostById(postId);
 
-            if (post == null) return res.status(404).send("Post not found")
+            if (post == null) return res.status(404).send(Constants.POSTS_NOT_FOUND)
+
+            const user: UserModel = await this.loginService.getUserInRequest(req);
 
             if (this.canSuscribeToPosts(user)) {
                 if (this.isAlreadySuscribed(user, post)) {
-                    return res.status(400).send("You are already suscribed to this post")
+                    return res.status(400).send(Constants.POSTS_SUSCRIBE_ALREADY_SUSCRIBED)
                 }
 
                 post.suscriptions.push(user);
                 const response = await this.postService.updatePost(post);
                 return res.status(200).send(response);
             } else {
-                return res.status(401).send("You are not allowed to suscribe to any posts")
+                return res.status(401).send(Constants.POSTS_SUSCRIBE_NOT_ALLOWED)
             }
+
+        } catch (e) {
+            return res.status(500).send(e);
+        }
+    }
+
+    async unsuscribeToPost(req: Request, res: Response) {
+        try {
+            const postId = parseInt(req.params.postId);
+            const post: any = await this.postService.getPostById(postId);
+
+            if (post == null) return res.status(404).send(Constants.POSTS_NOT_FOUND)
+
+            const user: UserModel = await this.loginService.getUserInRequest(req);
+
+            if (!this.canSuscribeToPosts(user)) {
+                return res.status(401).send(Constants.POSTS_UNSUSCRIBE_NOT_ALLOWED)
+            }
+
+            if (!this.isAlreadySuscribed(user, post)) {
+                return res.status(400).send(Constants.POSTS_UNSUSCRIBE_ALREADY_UNSUSCRIBED)
+            }
+
+            let postIndex = post.suscriptions
+                .map((suscription: UserModel, i: number) => {
+                    if (suscription.id == user.id) {
+                        return i;
+                    }
+                });
+
+            delete post.suscriptions[postIndex]
+            const response = await this.postService.updatePost(post);
+            return response ? res.status(200).send(Constants.POSTS_UNSUSCRIBE_OK) :
+                res.status(500).send(Constants.POSTS_UNSUSCRIBE_ERROR)
 
         } catch (e) {
             return res.status(500).send(e);

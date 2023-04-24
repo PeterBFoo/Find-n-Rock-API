@@ -31,4 +31,8 @@ router.post("/posts/suscribe/:postId", async (req: Request, res: Response) => {
     postController.suscribeToPost(req, res);
 })
 
+router.post("/posts/unsuscribe/:postId", async (req: Request, res: Response) => {
+    postController.unsuscribeToPost(req, res);
+})
+
 export default router;
