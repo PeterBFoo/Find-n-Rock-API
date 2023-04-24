@@ -49,6 +49,9 @@ export class PostModel implements PostInterface {
     @Column()
     city: string;
 
+    @Column()
+    active: boolean
+
     constructor(title: string, subtitle: string, date: Date, body: string, userId: number, genres: Tags[], image: string | null = null, suscriptions: UserModel[], country: string, region: string, city: string) {
         this.title = title;
         this.subtitle = subtitle;
@@ -61,6 +64,7 @@ export class PostModel implements PostInterface {
         this.country = country;
         this.region = region;
         this.city = city;
+        this.active = true;
     }
 
     static getEditableFields(): string[] {

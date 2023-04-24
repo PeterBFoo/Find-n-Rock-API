@@ -25,6 +25,9 @@ export class PostService implements Service {
      */
     async getPosts() {
         return await this.repository.find({
+            where: {
+                active: true
+            },
             relations: ["genres", "suscriptions", "user"]
         });
     }
@@ -58,6 +61,8 @@ export class PostService implements Service {
                     query = query.andWhere(`post.${key} = :${key}`, { [key]: value })
                 }
             }
+
+            query = query.andWhere('post.active = :active', { active: true })
 
             return await query.getMany();
         }
@@ -107,6 +112,7 @@ export class PostService implements Service {
     }
 
     async deletePost(post: PostModel) {
-        return await this.repository.remove(post);
+        post.active = false;
+        return await this.repository.save(post);
     }
 }
