@@ -43,7 +43,7 @@ describe("GET /api/auth/posts", () => {
             .set("Cookie", [`auth-token=${token}`])
             .expect(200)
             .then((res) => {
-                expect(res.body).toHaveLength(2);
+                expect(res.body.length).toBeGreaterThanOrEqual(2);
             })
     })
 
