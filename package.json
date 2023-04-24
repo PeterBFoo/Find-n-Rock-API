@@ -14,7 +14,7 @@
     "seed:test": "cross-env NODE_ENV=test node dist/src/db/runSeeders.js",
     "drop:test": "cross-env NODE_ENV=test node dist/src/db/dropTables.js"
   },
-  "author": "",
+  "author": "PeterBFoo",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -27,8 +27,6 @@
     "jsonwebtoken": "^9.0.0",
     "pg": "^8.10.0",
     "reflect-metadata": "^0.1.13",
-    "supertest": "^6.3.3",
-    "ts-jest": "^29.1.0",
     "typeorm": "^0.3.12",
     "typescript": "^5.0.2"
   },
@@ -45,6 +43,8 @@
     "@types/node": "^18.15.9",
     "@types/supertest": "^2.0.12",
     "concurrently": "^7.6.0",
+    "supertest": "^6.3.3",
+    "ts-jest": "^29.1.0",
     "jest": "^29.5.0",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.22",
