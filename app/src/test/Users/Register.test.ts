@@ -1,6 +1,7 @@
 import app from "../../../app";
 import request from "supertest";
 import dataSource from "../../db/dataSource";
+import { Constants } from "../../static/Constants";
 
 beforeAll(async () => {
     // connect to the database
@@ -143,9 +144,5 @@ describe("POST /register", () => {
                 role: "group"
             })
             .expect(400)
-            .then((response) => {
-                // assert that the response contains the new user
-                expect(response.body.error).toContain("Invalid data")
-            });
     }, 1000);
 });

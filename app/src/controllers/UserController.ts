@@ -19,14 +19,14 @@ export class UserController {
         return UserController.instance;
     }
 
-    async getProfile(req: Request, res: Response) {
+    async getProfile(req: Request, res: Response): Promise<Response<UserModel> | Response<string>> {
         const userInRequest = this.loginService.getUserInRequest(req);
         const user = await this.userService.getUserByUsername(userInRequest.username);
 
         return user ? res.status(200).send(user) : res.status(404).send(Constants.USER_NOT_FOUND)
     }
 
-    async getProfileByUsername(req: Request, res: Response) {
+    async getProfileByUsername(req: Request, res: Response): Promise<Response<UserModel> | Response<string>> {
         const username = req.params.username;
         const user = await this.userService.getUserByUsername(username);
 

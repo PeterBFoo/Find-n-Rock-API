@@ -4,6 +4,7 @@ import { RegisterService } from '../services/RegisterService';
 import { UserModel } from '../models/UserModel';
 import { RoleService } from '../services/RoleService';
 import { MusicGenreService } from "../services/MusicGenreService";
+import { Constants } from '../static/Constants';
 
 export class RegisterController {
     private RegisterService = RegisterService.getInstance();
@@ -23,34 +24,31 @@ export class RegisterController {
     }
 
     async register(req: Request, res: Response) {
-        if (!this.validRequest(req)) {
-            return res.status(400).send({ error: 'Invalid data' })
-        }
+        if (!this.validRequest(req)) return res.status(400).send(Constants.BAD_REQUEST)
 
         const roleModel = await this.RoleService.getRoleByName(req.body.role);
-        if (!roleModel) return res.status(400).send({ error: 'Not valid role' })
+        if (!roleModel) return res.status(400).send(Constants.ROLE_NOT_FOUND)
 
-        const {
-            musicalGenres,
-            role
-        } = req.body;
-
+        const musicalGenres = req.body.musicalGenres;
         const tags = musicalGenres ? await this.MusicGenreService.getMusicGenresByName(musicalGenres) : [];
 
         try {
-            if (role == "entrepreneur") {
-                var user = new UserModel(req.body.username, req.body.password, req.body.name, req.body.description, req.body.email, req.body.image, req.body.address, req.body.country, roleModel, req.body.phone);
+            if (roleModel.name == Constants.ROLE_ENTREPRENEOUR) {
+                var user = this.createEntrepreour(req, roleModel);
+
+            } else if (roleModel.name == Constants.ROLE_MUSIC_GROUP) {
+                var user = this.createMusicGroup(req, roleModel, tags);
+
             } else {
-                var user = new UserModel(req.body.username, req.body.password, req.body.name, req.body.description, req.body.email, req.body.image, req.body.address, req.body.country, roleModel, req.body.phone, req.body.integrants, tags);
+                return res.status(400).send(Constants.ROLE_NOT_FOUND);
             }
 
             const result = await this.RegisterService.register(user);
-            !Object.getOwnPropertyNames(result).includes("error") ? res.status(200).send(user) : res.status(400).send(result);
+            return !Object.getOwnPropertyNames(result).includes("error") ? res.status(200).send(user) : res.status(400).send(result);
         }
         catch (err: any) {
-            res.status(500).send({ error: err.message });
+            return res.status(500).send({ error: err.message });
         }
-
     }
 
     private validRequest(req: Request) {
@@ -59,5 +57,13 @@ export class RegisterController {
         }
 
         return false;
+    }
+
+    private createMusicGroup(req: Request, roleModel: any, tags: any): UserModel {
+        return new UserModel(req.body.username, req.body.password, req.body.name, req.body.description, req.body.email, req.body.image, req.body.address, req.body.country, roleModel, req.body.phone, req.body.integrants, tags);
+    }
+
+    private createEntrepreour(req: Request, roleModel: any): UserModel {
+        return new UserModel(req.body.username, req.body.password, req.body.name, req.body.description, req.body.email, req.body.image, req.body.address, req.body.country, roleModel, req.body.phone);
     }
 }

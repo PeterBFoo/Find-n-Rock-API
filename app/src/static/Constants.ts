@@ -14,6 +14,11 @@ export enum Constants {
     POSTS_CHOOSE_INVALID_USERS = "You didnt select any valid user to candidate, make sure that the users you select are suscribed",
     GENRES_INVALID = "Some of the genres requested does not exist",
     USER_NOT_FOUND = "User not found",
+    USER_ALREADY_EXISTS = "User already exists",
     GENERAL_ERROR = "Something went wrong, please try later",
-    BAD_REQUEST = "Invalid data, please ensure that you are sending the requested data correctly"
+    BAD_REQUEST = "Invalid data, please ensure that you are sending the requested data correctly",
+    ROLE_NOT_FOUND = "Role not found",
+    ROLE_ENTREPRENEOUR = "entrepreneur",
+    ROLE_MUSIC_GROUP = "group",
+    INTERNAL_SERVER_ERROR = "Internal server error",
 }
