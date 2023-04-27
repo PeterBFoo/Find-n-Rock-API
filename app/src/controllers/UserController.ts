@@ -25,4 +25,11 @@ export class UserController {
 
         return user ? res.status(200).send(user) : res.status(404).send(Constants.USER_NOT_FOUND)
     }
+
+    async getProfileByUsername(req: Request, res: Response) {
+        const username = req.params.username;
+        const user = await this.userService.getUserByUsername(username);
+
+        return user ? res.status(200).send(user) : res.status(404).send(Constants.USER_NOT_FOUND)
+    }
 }

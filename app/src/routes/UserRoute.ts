@@ -8,4 +8,8 @@ router.get('/profile', async (req: Request, res: Response) => {
     return UserController.getProfile(req, res);
 });
 
+router.get('/profile/:username', async (req: Request, res: Response) => {
+    return UserController.getProfileByUsername(req, res);
+});
+
 export default router;
