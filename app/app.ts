@@ -11,8 +11,9 @@ const loggedUserMiddleware = new LoggedUser().rejectIfNotLoggedIn;
 import login from './src/routes/LoginRoute';
 import register from './src/routes/RegisterRoute';
 import post from './src/routes/PostRoute';
+import user from './src/routes/UserRoute';
 const noAuthRoutes = [login, register]
-const authRoutes = [post]
+const authRoutes = [post, user]
 
 // DB //
 import envConfig from './src/config/DatabaseConfigurationConnection';
