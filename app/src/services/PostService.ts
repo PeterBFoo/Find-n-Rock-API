@@ -168,7 +168,15 @@ export class PostService implements Service {
             .getMany();
     }
 
-    async getHistoryPostsOfUser(user: UserModel) {
+    async getHistoryPostsOfEntrepreneur(user: UserModel) {
+        return await this.repository.createQueryBuilder('post')
+            .leftJoinAndSelect('post.genres', 'genres')
+            .andWhere('post.userId = :id', { id: user.id })
+            .addOrderBy('post.date', 'DESC')
+            .getMany();
+    }
+
+    async getHistoryPostsOfMusicalGroup(user: UserModel) {
         return await this.repository.createQueryBuilder('post')
             .leftJoin('post.suscriptions', 'suscriptions')
             .leftJoinAndSelect('post.genres', 'genres')

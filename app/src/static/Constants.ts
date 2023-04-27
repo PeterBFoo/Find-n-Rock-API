@@ -21,4 +21,5 @@ export enum Constants {
     ROLE_ENTREPRENEOUR = "entrepreneur",
     ROLE_MUSIC_GROUP = "group",
     INTERNAL_SERVER_ERROR = "Internal server error",
+    POSTS_HISTORY_NOT_ALLOWED = "Only the post owner can see the history of the post",
 }

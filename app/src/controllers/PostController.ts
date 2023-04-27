@@ -242,7 +242,15 @@ export class PostController {
     async getHistoryPostsOfUser(req: Request, res: Response) {
         try {
             const user: UserModel = await this.loginService.getUserInRequest(req);
-            const response = await this.postService.getHistoryPostsOfUser(user);
+            if (user.role.name == Constants.ROLE_ENTREPRENEOUR) {
+                var response = await this.postService.getHistoryPostsOfEntrepreneur(user);
+
+            } else if (user.role.name == Constants.ROLE_MUSIC_GROUP) {
+                var response = await this.postService.getHistoryPostsOfMusicalGroup(user);
+
+            } else {
+                return res.status(401).send(Constants.POSTS_HISTORY_NOT_ALLOWED)
+            }
 
             return res.status(200).send(response);
         } catch (e) {
