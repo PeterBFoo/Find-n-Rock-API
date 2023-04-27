@@ -129,20 +129,42 @@ export class PostService implements Service {
         return await this.repository.save(post);
     }
 
+    /**
+     * 
+     * @param post Post to be updated
+     * @returns The updated post
+     */
     async updatePost(post: PostInterface) {
         return await this.repository.save(post);
     }
 
+    /**
+     * 
+     * @param post Post to be deleted
+     * @returns 
+     */
     async deletePost(post: PostModel) {
         post.active = false;
         return await this.repository.save(post);
     }
 
+    /**
+     * 
+     * @param post Post to be suscribed to
+     * @param user User that suscribes to the post
+     * @returns 
+     */
     async suscribeToPost(post: PostModel, user: UserModel) {
         post.suscriptions.push(user);
         return await this.repository.save(post);
     }
 
+    /**
+     * 
+     * @param post Post to be unsuscribed to
+     * @param user User that unsuscribes to the post
+     * @returns 
+     */
     async unsuscribeToPost(post: PostModel, user: UserModel) {
         for (let i = 0; i < post.suscriptions.length; i++) {
             if (post.suscriptions[i].id == user.id) {
@@ -152,6 +174,16 @@ export class PostService implements Service {
         return await this.repository.save(post);
     }
 
+    /**
+     * 
+     * Select candidates of the post, after being selected, this post
+     * will remain inactive and will not be shown in public searches
+     * and will be shown in the history of the entrepreneur or the suscribed users.
+     * 
+     * @param post Post to be selected candidates
+     * @param candidates Candidates to be selected
+     * @returns 
+     */
     async selectCandidates(post: PostModel, candidates: UserModel[]): Promise<PostModel> {
         post.active = false;
         post.selectedCandidates = candidates;
@@ -159,6 +191,11 @@ export class PostService implements Service {
         return await this.repository.save(post);
     }
 
+    /**
+     * 
+     * @param user User to get the suscribed posts
+     * @returns 
+     */
     async getSuscribedPostsOfUser(user: UserModel) {
         return await this.repository.createQueryBuilder('post')
             .leftJoin('post.suscriptions', 'suscriptions')
@@ -168,6 +205,11 @@ export class PostService implements Service {
             .getMany();
     }
 
+    /**
+     * 
+     * @param user User to get the posts that he has created
+     * @returns 
+     */
     async getHistoryPostsOfEntrepreneur(user: UserModel) {
         return await this.repository.createQueryBuilder('post')
             .leftJoinAndSelect('post.genres', 'genres')
@@ -176,6 +218,11 @@ export class PostService implements Service {
             .getMany();
     }
 
+    /**
+     * 
+     * @param user User to get the posts where he is suscribed
+     * @returns 
+     */
     async getHistoryPostsOfMusicalGroup(user: UserModel) {
         return await this.repository.createQueryBuilder('post')
             .leftJoin('post.suscriptions', 'suscriptions')
