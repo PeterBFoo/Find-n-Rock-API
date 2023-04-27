@@ -25,12 +25,14 @@ export class PostService implements Service {
      * @returns Array of all posts, empty array if none found
      */
     async getPosts() {
-        return await this.repository.find({
-            where: {
-                active: true
-            },
-            relations: ["genres", "suscriptions", "user"]
-        });
+        return await this.repository.createQueryBuilder('post')
+            .leftJoinAndSelect('post.genres', 'genres')
+            .leftJoin('post.user', 'user')
+            .addSelect('user.username')
+            .leftJoin('post.suscriptions', 'suscriptions')
+            .addSelect(['suscriptions.username'])
+            .andWhere('post.active = :active', { active: true })
+            .getMany()
     }
 
     /**
@@ -50,6 +52,7 @@ export class PostService implements Service {
 
             query = query.leftJoinAndSelect('post.genres', 'genres')
                 .where('genres.id IN (:...ids)', { ids: desiredGenres.map(genre => genre.id) })
+                .andWhere('post.active = :active', { active: true })
                 .leftJoinAndSelect('post.user', 'user')
                 .leftJoinAndSelect('post.suscriptions', 'suscriptions')
 
@@ -90,11 +93,29 @@ export class PostService implements Service {
 
     /**
      * 
+     * @param id Id of the post to be retrieved
+     * @returns Active post with the given id, null if not found
+     */
+    async getActivePostById(id: number): Promise<PostModel | null> {
+        return await this.repository.createQueryBuilder('post')
+            .leftJoinAndSelect('post.suscriptions', 'suscriptions')
+            .leftJoinAndSelect('post.genres', 'genres')
+            .leftJoinAndSelect('post.user', 'user')
+            .andWhere('post.id = :id', { id: id })
+            .andWhere('post.active = :active', { active: true })
+            .getOne() || null;
+    }
+
+    /**
+     * 
      * @param user User object
      * @returns Posts of the input user
      */
     async getPostsOfUser(user: UserInterface) {
         return await this.repository.createQueryBuilder('post')
+            .leftJoin('post.suscriptions', 'suscriptions')
+            .addSelect(['suscriptions.username', 'suscriptions.phone', 'suscriptions.email'])
+            .leftJoinAndSelect('post.genres', 'genres')
             .andWhere('post.user = :id', { id: user.id })
             .getMany();
     }

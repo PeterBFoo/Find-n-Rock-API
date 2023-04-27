@@ -103,7 +103,7 @@ export class PostController {
         try {
             const postId = parseInt(req.params.postId);
             const user: UserModel = await this.loginService.getUserInRequest(req);
-            const post: any = await this.postService.getPostById(postId);
+            const post: any = await this.postService.getActivePostById(postId);
 
             if (post == null) return res.status(404).send(Constants.POSTS_NOT_FOUND)
 
@@ -133,7 +133,7 @@ export class PostController {
         try {
             const postId = parseInt(req.params.postId);
             const user: UserModel = await this.loginService.getUserInRequest(req);
-            const post: any = await this.postService.getPostById(postId);
+            const post: any = await this.postService.getActivePostById(postId);
 
             if (post == null) return res.status(404).send(Constants.POSTS_NOT_FOUND)
 
@@ -151,7 +151,7 @@ export class PostController {
     async suscribeToPost(req: Request, res: Response) {
         try {
             const postId = parseInt(req.params.postId);
-            const post: any = await this.postService.getPostById(postId);
+            const post: any = await this.postService.getActivePostById(postId);
 
             if (post == null) return res.status(404).send(Constants.POSTS_NOT_FOUND)
 
@@ -176,7 +176,7 @@ export class PostController {
     async unsuscribeToPost(req: Request, res: Response) {
         try {
             const postId = parseInt(req.params.postId);
-            const post: any = await this.postService.getPostById(postId);
+            const post: any = await this.postService.getActivePostById(postId);
 
             if (post == null) return res.status(404).send(Constants.POSTS_NOT_FOUND)
 
@@ -201,7 +201,7 @@ export class PostController {
 
     async chooseCandidatesOfPost(req: Request, res: Response) {
         const postId = parseInt(req.params.postId);
-        const post: PostModel | null = await this.postService.getPostById(postId);
+        const post: PostModel | null = await this.postService.getActivePostById(postId);
 
         if (post == null) return res.status(404).send(Constants.POSTS_NOT_FOUND)
 
