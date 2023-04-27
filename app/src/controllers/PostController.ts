@@ -228,6 +228,17 @@ export class PostController {
         }
     }
 
+    async getSuscribedPostsOfUser(req: Request, res: Response) {
+        try {
+            const user: UserModel = await this.loginService.getUserInRequest(req);
+            const response = await this.postService.getSuscribedPostsOfUser(user);
+
+            return res.status(200).send(response);
+        } catch (e) {
+            return res.status(500).send(e);
+        }
+    }
+
     private async areGenresValid(genres: string[]): Promise<boolean> {
         if (genres?.length > 0) {
             let response = await this.musicGenreService.getMusicGenresByName(genres);

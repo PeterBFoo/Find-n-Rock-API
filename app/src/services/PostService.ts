@@ -158,4 +158,13 @@ export class PostService implements Service {
 
         return await this.repository.save(post);
     }
+
+    async getSuscribedPostsOfUser(user: UserModel) {
+        return await this.repository.createQueryBuilder('post')
+            .leftJoin('post.suscriptions', 'suscriptions')
+            .leftJoinAndSelect('post.genres', 'genres')
+            .andWhere('suscriptions.id = :id', { id: user.id })
+            .andWhere('post.active = :active', { active: true })
+            .getMany();
+    }
 }

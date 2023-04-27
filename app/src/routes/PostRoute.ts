@@ -11,6 +11,10 @@ router.get('/posts/:username', async (req: Request, res: Response) => {
     postController.getPostsOfUser(req, res);
 })
 
+router.get("/suscribed/posts", async (req: Request, res: Response) => {
+    postController.getSuscribedPostsOfUser(req, res);
+})
+
 router.get('/post/:id', async (req: Request, res: Response) => {
     postController.getPostById(req, res);
 });
