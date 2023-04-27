@@ -1,0 +1,44 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Find 'n Rock API
+  description: Find 'n Rock API documentation
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:3000/ # Development
+  - url: http://localhost:8080/ # Production
+paths:
+  /api/login:
+
+  /api/logout:
+
+  /api/register:
+
+  /api/auth/posts:
+
+  /api/auth/posts/{username}:
+
+  /api/auth/post/{id}:
+
+  /api/auth/posts/create:
+
+  /api/auth/posts/edit/{postId}:
+
+  /api/auth/posts/delete/{postId}:
+
+  /api/auth/posts/suscribe/{postId}:
+
+  /api/auth/posts/unsuscribe/{postId}:
+
+  /api/auth/post/choose/{postId}:
+
+  /api/auth/suscribed/posts:
+
+  /api/auth/history/posts:
+
+  /api/auth/profile:
+
+  /api/auth/profile/{username}:
+
+  /api/auth/profile/edit: # PENDING

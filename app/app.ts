@@ -20,6 +20,12 @@ import envConfig from './src/config/DatabaseConfigurationConnection';
 import "reflect-metadata";
 import AppDataSource from './src/db/dataSource';
 
+// SWAGGER //
+import swaggerUi, { JsonObject } from 'swagger-ui-express';
+import yaml from 'js-yaml';
+import fs from 'fs';
+import path from 'path';
+
 const app: Express = express();
 const port = envConfig.PORT;
 
@@ -30,6 +36,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api", noAuthRoutes);
 app.use("/api/auth", loggedUserMiddleware)
 app.use("/api/auth", authRoutes);
+
+
+const swaggerDocument: JsonObject | unknown = yaml.load(fs.readFileSync(path.join(__dirname, "..", "/app/doc/swaggerDocumentation.yaml"), 'utf8'));
+swaggerDocument ? app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument)) :
+    console.log("Error loading swagger doc");
 
 if (envConfig.NODE_ENV != "test") {
     app.use(morgan('dev'));
