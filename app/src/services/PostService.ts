@@ -167,4 +167,13 @@ export class PostService implements Service {
             .andWhere('post.active = :active', { active: true })
             .getMany();
     }
+
+    async getHistoryPostsOfUser(user: UserModel) {
+        return await this.repository.createQueryBuilder('post')
+            .leftJoin('post.suscriptions', 'suscriptions')
+            .leftJoinAndSelect('post.genres', 'genres')
+            .andWhere('suscriptions.id = :id', { id: user.id })
+            .addOrderBy('post.date', 'DESC')
+            .getMany();
+    }
 }
