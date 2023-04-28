@@ -102,6 +102,8 @@ export class PostController {
     async editPost(req: Request, res: Response) {
         try {
             const postId = parseInt(req.params.postId);
+            if (!postId) return res.status(400).send(Constants.POSTS_INVALID_ID)
+
             const user: UserModel = await this.loginService.getUserInRequest(req);
             const post: any = await this.postService.getActivePostById(postId);
 
@@ -132,6 +134,8 @@ export class PostController {
     async deletePost(req: Request, res: Response) {
         try {
             const postId = parseInt(req.params.postId);
+            if (!postId) return res.status(400).send(Constants.POSTS_INVALID_ID)
+
             const user: UserModel = await this.loginService.getUserInRequest(req);
             const post: any = await this.postService.getActivePostById(postId);
 
@@ -151,6 +155,8 @@ export class PostController {
     async suscribeToPost(req: Request, res: Response) {
         try {
             const postId = parseInt(req.params.postId);
+            if (!postId) return res.status(400).send(Constants.POSTS_INVALID_ID)
+
             const post: any = await this.postService.getActivePostById(postId);
 
             if (post == null) return res.status(404).send(Constants.POSTS_NOT_FOUND)
@@ -176,6 +182,8 @@ export class PostController {
     async unsuscribeToPost(req: Request, res: Response) {
         try {
             const postId = parseInt(req.params.postId);
+            if (!postId) return res.status(400).send(Constants.POSTS_INVALID_ID)
+
             const post: any = await this.postService.getActivePostById(postId);
 
             if (post == null) return res.status(404).send(Constants.POSTS_NOT_FOUND)
@@ -201,6 +209,8 @@ export class PostController {
 
     async chooseCandidatesOfPost(req: Request, res: Response) {
         const postId = parseInt(req.params.postId);
+        if (!postId) return res.status(400).send(Constants.POSTS_INVALID_ID)
+
         const post: PostModel | null = await this.postService.getActivePostById(postId);
 
         if (post == null) return res.status(404).send(Constants.POSTS_NOT_FOUND)
@@ -209,7 +219,8 @@ export class PostController {
 
         if (!this.isPostOwner(postOwner, post)) return res.status(401).send(Constants.POSTS_CHOOSE_NOT_ALLOWED)
 
-        let candidatesInRequest = req.body;
+        let candidatesInRequest = req.body.candidates;
+        if (candidatesInRequest == undefined) return res.status(400).send(Constants.BAD_REQUEST);
         let candidates = [];
 
         for (let i = 0; i < candidatesInRequest.length; i++) {
@@ -222,10 +233,10 @@ export class PostController {
         if (candidates.length > 0) {
             const response = await this.postService.selectCandidates(post, candidates)
             return response ? res.status(200).send(post.selectedCandidates) : res.status(500).send(response)
-
-        } else {
-            return res.status(400).send(Constants.POSTS_CHOOSE_INVALID_USERS)
         }
+
+        return res.status(400).send(Constants.POSTS_CHOOSE_INVALID_USERS)
+
     }
 
     async getSuscribedPostsOfUser(req: Request, res: Response) {

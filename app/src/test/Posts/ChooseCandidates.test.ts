@@ -73,7 +73,9 @@ describe("POST /api/auth/post/choose/:postId", () => {
         await request(app)
             .post("/api/auth/post/choose/" + post.id)
             .set("Cookie", [`auth-token=${entrepreneourToken}`])
-            .send(["username2"])
+            .send({
+                candidates: ["username2"]
+            })
             .expect(200)
             .then((res) => {
                 expect(res.body[0].username).toEqual("username2")
@@ -95,7 +97,9 @@ describe("POST /api/auth/post/choose/:postId", () => {
         await request(app)
             .post("/api/auth/post/choose/9382673")
             .set("Cookie", [`auth-token=${entrepreneourToken}`])
-            .send(["username2"])
+            .send({
+                candidates: ["username2"]
+            })
             .expect(404)
     })
 
@@ -163,7 +167,9 @@ describe("POST /api/auth/post/choose/:postId", () => {
         await request(app)
             .post("/api/auth/post/choose/" + post.id)
             .set("Cookie", [`auth-token=${anotherEntrepreneourToken}`])
-            .send(["username2"])
+            .send({
+                candidates: ["username2"]
+            })
             .expect(401)
     })
 
@@ -272,9 +278,11 @@ describe("POST /api/auth/post/choose/:postId", () => {
         await request(app)
             .post("/api/auth/post/choose/" + post.id)
             .set("Cookie", [`auth-token=${entrepreneourToken}`])
-            .send([
-                "user_not_suscribed"
-            ])
+            .send({
+                candidates: [
+                    "user_not_suscribed"
+                ]
+            })
             .expect(400)
     })
 });

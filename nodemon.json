@@ -1,4 +1,4 @@
 {
   "watch": ["app/"],
-  "ext": "js, yaml, env"
+  "ext": "ts, yaml, env"
 }

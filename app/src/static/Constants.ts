@@ -6,6 +6,7 @@ export enum Constants {
     POSTS_UNSUSCRIBE_OK = "You have been unsuscribed to this post",
     POSTS_UNSUSCRIBE_ERROR = "An error ocurred, please try later",
     POSTS_UNSUSCRIBE_NOT_ALLOWED = "You are not allowed to unsuscribe or suscribe to this post",
+    POSTS_INVALID_ID = "ID is not valid, it must be a number",
     POSTS_NOT_FOUND = "Post not found",
     POSTS_CREATE_NOT_ALLOWED = 'Not allowed to create posts, only entrepreneours can create posts',
     POSTS_EDIT_NOT_ALLOWED = "Only the post owner can update this post, not active posts cannot be edit",
