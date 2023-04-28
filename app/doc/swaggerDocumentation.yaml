@@ -654,6 +654,19 @@ paths:
               schema:
                 $ref: "#/components/schemas/Post"
 
+  /api/genres:
+    get:
+      summary: Gets all the available genres
+      tags:
+        - MusicGenre
+      responses:
+        "200":
+          description: Gets all the available genres
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MusicGenre"
+
 components:
   schemas:
     User:

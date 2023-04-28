@@ -12,7 +12,8 @@ import login from './src/routes/LoginRoute';
 import register from './src/routes/RegisterRoute';
 import post from './src/routes/PostRoute';
 import user from './src/routes/UserRoute';
-const noAuthRoutes = [login, register]
+import genres from './src/routes/MusicGenresRoute';
+const noAuthRoutes = [login, register, genres]
 const authRoutes = [post, user]
 
 // DB //

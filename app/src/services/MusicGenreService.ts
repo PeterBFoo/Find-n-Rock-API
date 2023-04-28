@@ -38,4 +38,12 @@ export class MusicGenreService implements Service {
             .where("genres.name IN (:...names)", { names: names })
             .getMany()
     }
+
+    /**
+     * 
+     * @returns Array of all genres
+     */
+    async getMusicGenres(): Promise<MusicalGenreModel[]> {
+        return await this.repository.find();
+    }
 }
