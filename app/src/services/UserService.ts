@@ -30,5 +30,25 @@ export class UserService implements Service {
             relations: ["role"]
         });
     }
+
+    async emailExists(email: string) {
+        return await this.repository.exist({
+            where: {
+                email: email
+            }
+        });
+    }
+
+    async userExists(username: string) {
+        return await this.repository.exist({
+            where: {
+                username: username
+            }
+        });
+    }
+
+    async editProfile(user: UserModel): Promise<UserModel | null> {
+        return await this.repository.save(user);
+    }
 }
 

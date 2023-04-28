@@ -145,4 +145,38 @@ describe("POST /register", () => {
             })
             .expect(400)
     }, 1000);
+
+    it("Should not register an user when email already exists", async () => {
+        await request(app)
+            .post("/api/register")
+            .send({
+                username: "test_register_email",
+                password: "test_user",
+                name: "name",
+                description: "description",
+                email: "test-email@email.com",
+                image: "image",
+                address: "address",
+                country: "country",
+                phone: "phone",
+                role: "entrepreneur"
+            })
+            .expect(200)
+
+        await request(app)
+            .post("/api/register")
+            .send({
+                username: "test_register_camoflashed",
+                password: "test_user",
+                name: "name",
+                description: "description",
+                email: "test-email@email.com",
+                image: "image",
+                address: "address",
+                country: "country",
+                phone: "phone",
+                role: "entrepreneur"
+            })
+            .expect(400)
+    })
 });

@@ -91,7 +91,7 @@ export class UserModel implements EntrepreneourInterface, MusicalGroupInterface 
         if (userRole == "entrepreneur") {
             return ["username", "password", "name", "description", "email", "address", "country", "phone", "image", "role"]
         } else {
-            return ["username", "password", "name", "description", "email", "address", "country", "integrants", "image", "role"]
+            return ["username", "password", "name", "description", "email", "address", "country", "phone", "integrants", "image", "role"]
         }
     }
 
@@ -104,5 +104,28 @@ export class UserModel implements EntrepreneourInterface, MusicalGroupInterface 
         }
 
         return true;
+    }
+
+    static getCommonEditableFields() {
+        return ["password", "name", "description", "email", "address", "country", "phone", "image"]
+    }
+
+    static getEditableFieldsEntrepreneur() {
+        let editableFields = this.getCommonEditableFields();
+        return editableFields;
+    }
+
+    static getEditableFieldsMusicGroup() {
+        let editableFields = this.getCommonEditableFields();
+        editableFields.push("integrants", "genres")
+        return editableFields;
+    }
+
+    static hashPassword(password: string): string {
+        return bcrypt.hashSync(password);
+    }
+
+    static isTheSamePassword(password: string, hashedPassword: string): boolean {
+        return bcrypt.compareSync(password, hashedPassword);
     }
 }

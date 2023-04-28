@@ -12,4 +12,8 @@ router.get('/profile/:username', async (req: Request, res: Response) => {
     return UserController.getProfileByUsername(req, res);
 });
 
+router.post('/profile/edit', async (req: Request, res: Response) => {
+    return UserController.editProfile(req, res);
+});
+
 export default router;

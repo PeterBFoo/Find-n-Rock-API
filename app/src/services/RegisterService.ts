@@ -4,10 +4,12 @@ import { UserModel } from "../models/UserModel";
 import { Service } from "./interfaces/Service";
 import { ErrorResponse } from "./types/CommonTypes";
 import { Constants } from "../static/Constants";
+import { UserService } from "./UserService";
 
 export class RegisterService implements Service {
     private static instance: RegisterService;
     repository: Repository<UserModel> = connection.getRepository(UserModel);
+    userService: UserService = UserService.getInstance();
 
     static getInstance(): RegisterService {
         if (!RegisterService.instance) {
@@ -23,28 +25,16 @@ export class RegisterService implements Service {
      * @returns User object if registration was successful, error message otherwise
      */
     async register(user: UserModel): Promise<UserModel | ErrorResponse> {
-        if (await this.userExists(user.username)) {
+        if (await this.userService.userExists(user.username)) {
             return {
                 error: Constants.USER_ALREADY_EXISTS
             };
+        } else if (await this.userService.emailExists(user.email)) {
+            return {
+                error: Constants.EMAIL_ALREADY_EXISTS
+            }
         }
 
         return await this.repository.save(user);
     }
-
-    /**
-     * 
-     * @param username Username of the user
-     * @returns True if the user exists, false otherwise
-     */
-    private async userExists(username: string): Promise<boolean> {
-        return await this.repository.exist({
-            where: {
-                username: username
-            }
-        });
-    }
-
-
-
 }

@@ -17,7 +17,7 @@ router.post('/logout', (req: Request, res: Response) => {
         return res.status(400).send('You are not logged in');
     }
 
-    return LoginController.logout(req, res);
+    return LoginController.logout(res);
 });
 
 export default router;

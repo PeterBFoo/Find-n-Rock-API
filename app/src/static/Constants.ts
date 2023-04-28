@@ -22,4 +22,5 @@ export enum Constants {
     ROLE_MUSIC_GROUP = "group",
     INTERNAL_SERVER_ERROR = "Internal server error",
     POSTS_HISTORY_NOT_ALLOWED = "Only the post owner can see the history of the post",
+    EMAIL_ALREADY_EXISTS = "This email already exists"
 }
