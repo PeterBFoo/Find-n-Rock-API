@@ -46,4 +46,17 @@ export class MusicGenreService implements Service {
     async getMusicGenres(): Promise<MusicalGenreModel[]> {
         return await this.repository.find();
     }
+
+    async genreExists(name: string): Promise<boolean> {
+        return await this.repository.exist({
+            where: {
+                name: name
+            }
+        });
+    }
+
+    async createMusicGenre(name: string): Promise<MusicalGenreModel> {
+        const genre = new MusicalGenreModel(name);
+        return await this.repository.save(genre);
+    }
 }

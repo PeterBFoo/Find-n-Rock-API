@@ -13,8 +13,9 @@ import register from './src/routes/RegisterRoute';
 import post from './src/routes/PostRoute';
 import user from './src/routes/UserRoute';
 import genres from './src/routes/MusicGenresRoute';
+import genresAuth from './src/routes/MusicGenresAuthRoute';
 const noAuthRoutes = [login, register, genres]
-const authRoutes = [post, user]
+const authRoutes = [post, user, genresAuth]
 
 // DB //
 import envConfig from './src/config/DatabaseConfigurationConnection';
@@ -38,17 +39,16 @@ app.use("/api", noAuthRoutes);
 app.use("/api/auth", loggedUserMiddleware)
 app.use("/api/auth", authRoutes);
 
-
-const swaggerDocument: JsonObject | unknown = yaml.load(fs.readFileSync(path.join(__dirname, "..", "/app/doc/swaggerDocumentation.yaml"), 'utf8'));
-swaggerDocument ? app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument)) :
-    console.log("Error loading swagger doc");
-
 if (envConfig.NODE_ENV != "test") {
-    app.use(morgan('dev'));
-
     AppDataSource.initialize()
         .then(() => {
             console.log('Database connection established');
+
+            app.use(morgan('dev'));
+
+            const swaggerDocument: JsonObject | unknown = yaml.load(fs.readFileSync(path.join(__dirname, "..", "/app/doc/swaggerDocumentation.yaml"), 'utf8'));
+            swaggerDocument ? app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument)) :
+                console.log("Error loading swagger doc");
         })
         .catch((error) => console.log("Database connection error: ", error));
 

@@ -23,5 +23,9 @@ export enum Constants {
     ROLE_MUSIC_GROUP = "group",
     INTERNAL_SERVER_ERROR = "Internal server error",
     POSTS_HISTORY_NOT_ALLOWED = "Only the post owner can see the history of the post",
-    EMAIL_ALREADY_EXISTS = "This email already exists"
+    EMAIL_ALREADY_EXISTS = "This email already exists",
+    GENRES_NAME_REQUIRED = "Genre name is required",
+    GENRES_ALREADY_EXISTS = "Genre already exists",
+    GENRES_CREATION_NOT_ALLOWED = "You don't have permission to create genres",
+
 }
