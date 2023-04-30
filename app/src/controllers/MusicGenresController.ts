@@ -35,4 +35,17 @@ export class MusicGenresController {
         const newGenre = await this.genresService.createMusicGenre(genre);
         return res.status(201).send(newGenre);
     }
+
+    async deleteMusicGenre(req: Request, res: Response) {
+        let genre = req.params.name;
+        let user = await this.loginService.getUserInRequest(req);
+
+        if (!genre) return res.status(400).send(Constants.GENRES_NAME_REQUIRED);
+        if (!await this.genresService.genreExists(genre)) return res.status(404).send(Constants.GENRES_NOT_FOUND);
+
+        if (!user.role.canCreateRolesAndGenres) return res.status(403).send(Constants.GENRES_DELETION_NOT_ALLOWED);
+
+        await this.genresService.deleteMusicGenre(genre);
+        return res.status(204).send(Constants.GENRES_DELETED);
+    }
 }

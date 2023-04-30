@@ -680,7 +680,7 @@ paths:
             schema:
               $ref: "#/components/schemas/MusicGenre"
             example:
-              name: New genre
+              name: Jazz
 
       responses:
         "201":
@@ -698,6 +698,44 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/MusicGenre"
+
+  /api/auth/genres/delete/{name}:
+    delete:
+      summary: Deletes a music genre
+      tags:
+        - MusicGenre
+      parameters:
+        - name: name
+          in: path
+          description: Genre to delete
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "204":
+          description: Genre deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MusicGenre"
+        "400":
+          description: Bad request
+
+        "403":
+          description: Only the admin can do this action
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MusicGenre"
+
+        "404":
+          description: Genre not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MusicGenre"
+
 components:
   schemas:
     User:

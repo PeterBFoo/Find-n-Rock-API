@@ -26,6 +26,10 @@ export enum Constants {
     EMAIL_ALREADY_EXISTS = "This email already exists",
     GENRES_NAME_REQUIRED = "Genre name is required",
     GENRES_ALREADY_EXISTS = "Genre already exists",
+    GENRES_NOT_FOUND = "Genre not found",
+    GENRES_DELETION_NOT_ALLOWED = "You don't have permission to delete genres",
+    GENRES_DELETED = "Genre deleted",
     GENRES_CREATION_NOT_ALLOWED = "You don't have permission to create genres",
+    GENRES_IN_USE = "This genre is in use, you can't delete it",
 
 }

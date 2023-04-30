@@ -23,7 +23,7 @@ describe("POST /api/auth/profile/edit", () => {
                 password: "editProfileTest",
                 name: "name",
                 description: "description",
-                email: "test-email@email.com",
+                email: "testtesttestemail@email.com",
                 image: "image",
                 address: "address",
                 country: "country",

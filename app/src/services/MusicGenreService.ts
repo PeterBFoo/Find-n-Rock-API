@@ -59,4 +59,10 @@ export class MusicGenreService implements Service {
         const genre = new MusicalGenreModel(name);
         return await this.repository.save(genre);
     }
+
+    async deleteMusicGenre(name: string): Promise<void> {
+        await this.repository.delete({
+            name: name
+        });
+    }
 }
