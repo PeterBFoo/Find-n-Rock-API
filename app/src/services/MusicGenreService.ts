@@ -47,6 +47,11 @@ export class MusicGenreService implements Service {
         return await this.repository.find();
     }
 
+    /**
+     * 
+     * @param name Genre name
+     * @returns Boolean determining if genre exists
+     */
     async genreExists(name: string): Promise<boolean> {
         return await this.repository.exist({
             where: {
@@ -55,11 +60,21 @@ export class MusicGenreService implements Service {
         });
     }
 
+    /**
+     * 
+     * @param name Genre name
+     * @returns Creates a music genre
+     */
     async createMusicGenre(name: string): Promise<MusicalGenreModel> {
         const genre = new MusicalGenreModel(name);
         return await this.repository.save(genre);
     }
 
+    /**
+     * 
+     * @param name Genre name
+     * Deletes an music genre
+     */
     async deleteMusicGenre(name: string): Promise<void> {
         await this.repository.delete({
             name: name

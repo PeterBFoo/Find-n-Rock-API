@@ -31,6 +31,11 @@ export class UserService implements Service {
         });
     }
 
+    /**
+     * 
+     * @param email 
+     * @returns 
+     */
     async emailExists(email: string) {
         return await this.repository.exist({
             where: {
@@ -39,6 +44,11 @@ export class UserService implements Service {
         });
     }
 
+    /**
+     * 
+     * @param username User name
+     * @returns Bolean that determines if user exists
+     */
     async userExists(username: string) {
         return await this.repository.exist({
             where: {
@@ -47,6 +57,11 @@ export class UserService implements Service {
         });
     }
 
+    /**
+     * 
+     * @param user User
+     * @returns The edited user
+     */
     async editProfile(user: UserModel): Promise<UserModel | null> {
         return await this.repository.save(user);
     }

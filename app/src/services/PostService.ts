@@ -8,7 +8,6 @@ import { UserInterface } from "../models/interfaces/UserInterface";
 import { PostInterface } from "../models/interfaces/PostInterface";
 import { UserModel } from "../models/UserModel";
 import { Mailman } from "../utils/mailman/mailman"
-import { Constants } from "../static/Constants";
 
 export class PostService implements Service {
     private static instance: PostService;
@@ -184,6 +183,8 @@ export class PostService implements Service {
      * will remain inactive and will not be shown in public searches
      * and will be shown in the history of the entrepreneur or the suscribed users.
      * 
+     * Emails will be sent to the selected candidates.
+     * 
      * @param post Post to be selected candidates
      * @param candidates Candidates to be selected
      * @returns 
@@ -204,6 +205,13 @@ export class PostService implements Service {
         return null;
     }
 
+    /**
+     * 
+     * @param candidates Selected candidates of the post
+     * @param postOwner Post owner
+     * 
+     * Sends an email to the selected candidates of the post
+     */
     private async sendMailToCandidates(candidates: UserModel[], postOwner: UserModel) {
         let candidatesEmail: string[] = []
         candidates.forEach(async (candidate) => {
