@@ -1,15 +1,15 @@
 import connection from "../db/dataSource";
 import { Repository } from 'typeorm';
 import { UserModel } from "../models/UserModel";
-import { Service } from "./interfaces/Service";
 import { ErrorResponse } from "./types/CommonTypes";
 import { Constants } from "../static/Constants";
+import { ExtendedService } from "./interfaces/ExtendedService";
 import { UserService } from "./UserService";
 
-export class RegisterService implements Service {
+export class RegisterService implements ExtendedService {
     private static instance: RegisterService;
     repository: Repository<UserModel> = connection.getRepository(UserModel);
-    userService: UserService = UserService.getInstance();
+    externalService: UserService = UserService.getInstance();
 
     static getInstance(): RegisterService {
         if (!RegisterService.instance) {
@@ -25,11 +25,11 @@ export class RegisterService implements Service {
      * @returns User object if registration was successful, error message otherwise
      */
     async register(user: UserModel): Promise<UserModel | ErrorResponse> {
-        if (await this.userService.userExists(user.username)) {
+        if (await this.externalService.userExists(user.username)) {
             return {
                 error: Constants.USER_ALREADY_EXISTS
             };
-        } else if (await this.userService.emailExists(user.email)) {
+        } else if (await this.externalService.emailExists(user.email)) {
             return {
                 error: Constants.EMAIL_ALREADY_EXISTS
             }

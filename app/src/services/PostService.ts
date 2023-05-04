@@ -7,7 +7,7 @@ import { Service } from "./interfaces/Service";
 import { UserInterface } from "../models/interfaces/UserInterface";
 import { PostInterface } from "../models/interfaces/PostInterface";
 import { UserModel } from "../models/UserModel";
-import { Mailman } from "../utils/mailman/mailman"
+import { Mailman } from "../utils/mailman/mailman";
 
 export class PostService implements Service {
     private static instance: PostService;

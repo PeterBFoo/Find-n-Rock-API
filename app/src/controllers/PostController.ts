@@ -6,13 +6,8 @@ import { MusicGenreService } from '../services/MusicGenreService';
 import { UserService } from '../services/UserService';
 import { UserModel } from '../models/UserModel';
 import { Constants } from '../static/Constants';
+import { AvailableFilters } from './types/PostTypes';
 
-type AvailableFilters = {
-    country?: string,
-    region?: string,
-    city?: string,
-    genres?: string[]
-}
 
 export class PostController {
     private FILTERS_LIST = ['country', 'region', 'city', 'genres'];
