@@ -1,4 +1,5 @@
 import connection from "../db/dataSource";
+import envConf from "../config/DatabaseConfigurationConnection"
 import { PostModel } from "../models/PostModel";
 import { MusicGenreService } from "./MusicGenreService";
 import { Repository } from 'typeorm';
@@ -6,11 +7,14 @@ import { Service } from "./interfaces/Service";
 import { UserInterface } from "../models/interfaces/UserInterface";
 import { PostInterface } from "../models/interfaces/PostInterface";
 import { UserModel } from "../models/UserModel";
+import { Mailman } from "../utils/mailman/mailman"
+import { Constants } from "../static/Constants";
 
 export class PostService implements Service {
     private static instance: PostService;
     repository: Repository<PostModel> = connection.getRepository(PostModel);
     private genreservice: MusicGenreService = MusicGenreService.getInstance();
+    private mailSender: Mailman = new Mailman(envConf.MAIL_API_KEY, envConf.MAIL);
 
     static getInstance(): PostService {
         if (!PostService.instance) {
@@ -184,11 +188,49 @@ export class PostService implements Service {
      * @param candidates Candidates to be selected
      * @returns 
      */
-    async selectCandidates(post: PostModel, candidates: UserModel[]): Promise<PostModel> {
-        post.active = false;
-        post.selectedCandidates = candidates;
+    async selectCandidates(postOwner: UserModel, post: PostModel, candidates: UserModel[]): Promise<PostModel | { post: PostModel, errors: unknown }> {
+        try {
+            post.active = false;
+            post.selectedCandidates = candidates;
 
-        return await this.repository.save(post);
+            var savedPost = await this.repository.save(post);
+
+            try {
+                var mailSender = await this.sendMailToCandidates(candidates, postOwner)
+                return !mailSender.errors ? savedPost : {
+                    post: savedPost,
+                    errors: mailSender.errors
+                }
+            } catch (e) {
+                console.log(e);
+            }
+
+            return savedPost;
+        } catch (e) {
+            console.log(e);
+        }
+
+        return {
+            post: post,
+            errors: Constants.GENERAL_ERROR
+        }
+    }
+
+    private async sendMailToCandidates(candidates: UserModel[], postOwner: UserModel) {
+        let res = {
+            errors: ""
+        }
+
+        let candidatesEmail: string[] = []
+        candidates.forEach(async (candidate) => {
+            candidatesEmail.push(candidate.email)
+        })
+
+        let html = "<h2>Congratulations</h2><p>You have been selected as a candidate of a job offer. The information details about the entrepreneur are here:</p><ul><li>Email:" + postOwner.email + "</li></ul>";
+
+        await this.mailSender.sendMultipleMails(candidatesEmail, "¡Congratulations! You have been selected", html);
+
+        return res;
     }
 
     /**

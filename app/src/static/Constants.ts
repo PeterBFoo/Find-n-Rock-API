@@ -13,6 +13,7 @@ export enum Constants {
     POSTS_DELETE_NOT_ALLOWED = "Only the post owner can delete this post, not active posts can't be deleted",
     POSTS_CHOOSE_NOT_ALLOWED = "Only the post owner can choose candidates of the post, not active posts can't do the selection of candidates process",
     POSTS_CHOOSE_INVALID_USERS = "You didnt select any valid user to candidate, make sure that the users you select are suscribed",
+    POSTS_SEND_EMAIL_ERROR = "An unexpected error ocurred when sending the mail",
     GENRES_INVALID = "Some of the genres requested does not exist",
     USER_NOT_FOUND = "User not found",
     USER_ALREADY_EXISTS = "User already exists",

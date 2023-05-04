@@ -231,8 +231,12 @@ export class PostController {
         }
 
         if (candidates.length > 0) {
-            const response = await this.postService.selectCandidates(post, candidates)
-            return response ? res.status(200).send(post.selectedCandidates) : res.status(500).send(response)
+            const response = await this.postService.selectCandidates(postOwner, post, candidates)
+
+            return !Object.getOwnPropertyNames(response).includes("errors") ? res.status(200).send(post.selectedCandidates) : res.status(500).send({
+                data: response,
+                errors: Constants.POSTS_SEND_EMAIL_ERROR
+            })
         }
 
         return res.status(400).send(Constants.POSTS_CHOOSE_INVALID_USERS)

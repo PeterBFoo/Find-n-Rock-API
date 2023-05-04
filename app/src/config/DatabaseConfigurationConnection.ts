@@ -16,6 +16,8 @@ class Config {
     SYNCHRONIZE: boolean;
     LOGGING: boolean;
     SECRET_KEY: string;
+    MAIL_API_KEY: string;
+    MAIL: string;
 
     constructor() {
         dotenv.config({
@@ -33,6 +35,14 @@ class Config {
         this.SYNCHRONIZE = process.env.SYNCHRONIZE === "true";
         this.LOGGING = process.env.LOGGING === "true";
         this.SECRET_KEY = process.env.SECRET_KEY || "secret";
+
+        if (process.env.MAIL_API_KEY == undefined) {
+            throw new Error("Couldn't get the correct key for the mail API")
+        } else {
+            this.MAIL_API_KEY = process.env.MAIL_API_KEY
+        }
+
+        this.MAIL = process.env.MAIL = "findnrock@gmail.com"
     }
 
     getPort(): number {
