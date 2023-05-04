@@ -17,7 +17,6 @@
   "author": "PeterBFoo",
   "license": "ISC",
   "dependencies": {
-    "@sendgrid/mail": "^7.7.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
@@ -27,6 +26,7 @@
     "express": "^4.18.2",
     "express-openapi": "^12.1.0",
     "jsonwebtoken": "^9.0.0",
+    "mailman": "file:app/src/utils/mailman",
     "pg": "^8.10.0",
     "reflect-metadata": "^0.1.13",
     "swagger-ui-express": "^4.6.2",

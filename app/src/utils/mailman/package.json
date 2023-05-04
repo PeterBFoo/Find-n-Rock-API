@@ -1,7 +1,7 @@
 {
   "name": "mailman",
   "version": "1.0.0",
-  "description": "NPM module to send emails using Nodemailer",
+  "description": "NPM module to send emails using SendGrid",
   "main": "mailman.js",
   "scripts": {
     "test": "npx tsc && jest --forceExit --detectOpenHandles --runInBand"
@@ -9,11 +9,10 @@
   "keywords": [
     "mail"
   ],
-  "author": "PeterBFoo",
+  "author": "peterbfoo",
   "license": "ISC",
   "dependencies": {
-    "@sendgrid/mail": "^7.7.0",
-    "dotenv": "^16.0.3"
+    "@sendgrid/mail": "^7.7.0"
   },
   "devDependencies": {
     "jest": "^29.5.0"
