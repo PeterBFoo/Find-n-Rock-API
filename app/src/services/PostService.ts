@@ -188,39 +188,23 @@ export class PostService implements Service {
      * @param candidates Candidates to be selected
      * @returns 
      */
-    async selectCandidates(postOwner: UserModel, post: PostModel, candidates: UserModel[]): Promise<PostModel | { post: PostModel, errors: unknown }> {
+    async selectCandidates(postOwner: UserModel, post: PostModel, candidates: UserModel[]): Promise<PostModel | null> {
         try {
             post.active = false;
             post.selectedCandidates = candidates;
 
             var savedPost = await this.repository.save(post);
-
-            try {
-                var mailSender = await this.sendMailToCandidates(candidates, postOwner)
-                return !mailSender.errors ? savedPost : {
-                    post: savedPost,
-                    errors: mailSender.errors
-                }
-            } catch (e) {
-                console.log(e);
-            }
+            await this.sendMailToCandidates(candidates, postOwner)
 
             return savedPost;
         } catch (e) {
             console.log(e);
         }
 
-        return {
-            post: post,
-            errors: Constants.GENERAL_ERROR
-        }
+        return null;
     }
 
     private async sendMailToCandidates(candidates: UserModel[], postOwner: UserModel) {
-        let res = {
-            errors: ""
-        }
-
         let candidatesEmail: string[] = []
         candidates.forEach(async (candidate) => {
             candidatesEmail.push(candidate.email)
@@ -229,8 +213,6 @@ export class PostService implements Service {
         let html = "<h2>Congratulations</h2><p>You have been selected as a candidate of a job offer. The information details about the entrepreneur are here:</p><ul><li>Email:" + postOwner.email + "</li></ul>";
 
         await this.mailSender.sendMultipleMails(candidatesEmail, "¡Congratulations! You have been selected", html);
-
-        return res;
     }
 
     /**
