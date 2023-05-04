@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { Constants } from '../static/Constants';
 import jwt from 'jsonwebtoken';
 import envConfig from '../config/DatabaseConfigurationConnection'
 
@@ -11,7 +12,7 @@ export class LoggedUser {
         }
 
         if (!isLoggedUser(req)) {
-            return res.status(401).send("Unauthorized");
+            return res.status(401).send(Constants.UNAUTHORIZED);
         } else {
             next();
         }
