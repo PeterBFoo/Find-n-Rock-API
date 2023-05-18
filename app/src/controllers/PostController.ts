@@ -62,7 +62,8 @@ export class PostController {
 
     async createPost(req: Request, res: Response) {
         try {
-            const user = await this.loginService.getUserInRequest(req);
+            const user: any = await this.loginService.getUserInRequest(req);
+            if (!user) return res.status(401).send({ error: Constants.UNAUTHORIZED });
 
             if (user.role.canManagePosts) {
                 if (PostModel.isValidPost(req.body)) {
@@ -99,7 +100,8 @@ export class PostController {
             const postId = parseInt(req.params.postId);
             if (!postId) return res.status(400).send(Constants.POSTS_INVALID_ID)
 
-            const user: UserModel = await this.loginService.getUserInRequest(req);
+            const user: any = await this.loginService.getUserInRequest(req);
+            if (!user) return res.status(401).send({ error: Constants.UNAUTHORIZED });
             const post: any = await this.postService.getActivePostById(postId);
 
             if (post == null) return res.status(404).send(Constants.POSTS_NOT_FOUND)
@@ -131,7 +133,8 @@ export class PostController {
             const postId = parseInt(req.params.postId);
             if (!postId) return res.status(400).send(Constants.POSTS_INVALID_ID)
 
-            const user: UserModel = await this.loginService.getUserInRequest(req);
+            const user: any = await this.loginService.getUserInRequest(req);
+            if (!user) return res.status(401).send({ error: Constants.UNAUTHORIZED });
             const post: any = await this.postService.getActivePostById(postId);
 
             if (post == null) return res.status(404).send(Constants.POSTS_NOT_FOUND)
@@ -156,7 +159,8 @@ export class PostController {
 
             if (post == null) return res.status(404).send(Constants.POSTS_NOT_FOUND)
 
-            const user: UserModel = await this.loginService.getUserInRequest(req);
+            const user: any = await this.loginService.getUserInRequest(req);
+            if (!user) return res.status(401).send({ error: Constants.UNAUTHORIZED });
 
             if (this.canSuscribeToPosts(user)) {
                 if (this.isAlreadySuscribed(user, post)) {
@@ -183,7 +187,8 @@ export class PostController {
 
             if (post == null) return res.status(404).send(Constants.POSTS_NOT_FOUND)
 
-            const user: UserModel = await this.loginService.getUserInRequest(req);
+            const user: any = await this.loginService.getUserInRequest(req);
+            if (!user) return res.status(401).send({ error: Constants.UNAUTHORIZED });
 
             if (!this.canSuscribeToPosts(user)) {
                 return res.status(401).send(Constants.POSTS_UNSUSCRIBE_NOT_ALLOWED)
@@ -194,7 +199,8 @@ export class PostController {
             }
 
             const response = await this.postService.unsuscribeToPost(post, user);
-            return response ? res.status(200).send(Constants.POSTS_UNSUSCRIBE_OK) :
+
+            return response ? res.status(200).send(response) :
                 res.status(500).send(Constants.POSTS_UNSUSCRIBE_ERROR)
 
         } catch (e) {
@@ -210,7 +216,8 @@ export class PostController {
 
         if (post == null) return res.status(404).send(Constants.POSTS_NOT_FOUND)
 
-        const postOwner: UserModel = await this.loginService.getUserInRequest(req);
+        const postOwner: any = await this.loginService.getUserInRequest(req);
+        if (!postOwner) return res.status(401).send({ error: Constants.UNAUTHORIZED });
 
         if (!this.isPostOwner(postOwner, post)) return res.status(401).send(Constants.POSTS_CHOOSE_NOT_ALLOWED)
 
@@ -237,7 +244,8 @@ export class PostController {
 
     async getSuscribedPostsOfUser(req: Request, res: Response) {
         try {
-            const user: UserModel = await this.loginService.getUserInRequest(req);
+            const user: any = await this.loginService.getUserInRequest(req);
+            if (!user) return res.status(401).send({ error: Constants.UNAUTHORIZED });
             const response = await this.postService.getSuscribedPostsOfUser(user);
 
             return res.status(200).send(response);
@@ -248,7 +256,8 @@ export class PostController {
 
     async getHistoryPostsOfUser(req: Request, res: Response) {
         try {
-            const user: UserModel = await this.loginService.getUserInRequest(req);
+            const user: any = await this.loginService.getUserInRequest(req);
+            if (!user) return res.status(401).send({ error: Constants.UNAUTHORIZED });
             if (user.role.name == Constants.ROLE_ENTREPRENEOUR) {
                 var response = await this.postService.getHistoryPostsOfEntrepreneur(user);
 

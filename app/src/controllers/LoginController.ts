@@ -24,7 +24,9 @@ export class LoginController {
             return res.status(401).send(result.error);
         }
 
-        return res.cookie("auth-token", result.token).send(result);
+        return res.cookie("auth-token", result.token, {
+            httpOnly: true
+        }).send(result);
     }
 
     async logout(res: Response) {

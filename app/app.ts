@@ -32,7 +32,10 @@ const app: Express = express();
 const port = envConfig.PORT;
 
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+    origin: envConfig.ALLOWED_SERVER,
+    credentials: true
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api", noAuthRoutes);

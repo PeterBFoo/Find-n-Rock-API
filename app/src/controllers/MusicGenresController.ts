@@ -25,11 +25,11 @@ export class MusicGenresController {
 
     async createMusicGenre(req: Request, res: Response) {
         let genre = req.body.name;
-        let user = await this.loginService.getUserInRequest(req);
+        let user: any = await this.loginService.getUserInRequest(req);
 
+        if (!user) return res.status(401).send(Constants.UNAUTHORIZED);
         if (!genre) return res.status(400).send(Constants.GENRES_NAME_REQUIRED);
         if (await this.genresService.genreExists(genre)) return res.status(400).send(Constants.GENRES_ALREADY_EXISTS);
-
         if (!user.role.canCreateRolesAndGenres) return res.status(403).send(Constants.GENRES_CREATION_NOT_ALLOWED);
 
         const newGenre = await this.genresService.createMusicGenre(genre);
@@ -38,8 +38,9 @@ export class MusicGenresController {
 
     async deleteMusicGenre(req: Request, res: Response) {
         let genre = req.params.name;
-        let user = await this.loginService.getUserInRequest(req);
+        let user: any = await this.loginService.getUserInRequest(req);
 
+        if (!user) return res.status(401).send(Constants.UNAUTHORIZED);
         if (!genre) return res.status(400).send(Constants.GENRES_NAME_REQUIRED);
         if (!await this.genresService.genreExists(genre)) return res.status(404).send(Constants.GENRES_NOT_FOUND);
 

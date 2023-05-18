@@ -22,7 +22,9 @@ export class UserController {
     }
 
     async getProfile(req: Request, res: Response): Promise<Response<UserModel> | Response<string>> {
-        const userInRequest = this.loginService.getUserInRequest(req);
+        const userInRequest = await this.loginService.getUserInRequest(req);
+        if (!userInRequest) return res.status(401).send(Constants.UNAUTHORIZED);
+
         const user = await this.userService.getUserByUsername(userInRequest.username);
 
         return user ? res.status(200).send(user) : res.status(404).send(Constants.USER_NOT_FOUND)
@@ -37,7 +39,9 @@ export class UserController {
 
     async editProfile(req: Request, res: Response) {
         try {
-            let user = this.loginService.getUserInRequest(req);
+            let user: any = await this.loginService.getUserInRequest(req);
+            if (!user) return res.status(401).send(Constants.UNAUTHORIZED);
+
             let userInDb = await this.userService.getUserByUsername(user.username);
 
             if (!userInDb) return res.status(404).send(Constants.USER_NOT_FOUND);
@@ -45,7 +49,7 @@ export class UserController {
 
             const editableFields = user.role.name == Constants.ROLE_ENTREPRENEOUR ?
                 UserModel.getEditableFieldsEntrepreneur() :
-                UserModel.getEditableFieldsMusicGroup()
+                UserModel.getEditableFieldsMusicGroup();
 
             editableFields.forEach(async (field) => {
                 if (field == "genres" && req.body["genres"] != undefined) {

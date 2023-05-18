@@ -171,7 +171,7 @@ export class PostService implements Service {
     async unsuscribeToPost(post: PostModel, user: UserModel) {
         for (let i = 0; i < post.suscriptions.length; i++) {
             if (post.suscriptions[i].id == user.id) {
-                delete post.suscriptions[i];
+                post.suscriptions[i] = {} as UserModel;
             }
         }
         return await this.repository.save(post);

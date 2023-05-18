@@ -6,6 +6,7 @@ import { ErrorResponse } from './types/CommonTypes';
 import { Request } from 'express';
 import { ExtendedService } from './interfaces/ExtendedService';
 import { UserService } from './UserService';
+import { UserModel } from '../models/UserModel';
 
 export class LoginService implements ExtendedService {
     private static instance: LoginService;
@@ -49,8 +50,13 @@ export class LoginService implements ExtendedService {
      * @param req Express request object
      * @returns User object if the token is valid, null otherwise
      */
-    getUserInRequest(req: Request): any {
-        return jwt.decode(req.cookies["auth-token"]);
+    async getUserInRequest(req: Request): Promise<UserModel | null> {
+        let token = req.cookies["auth-token"];
+        let user: any = jwt.decode(token)
+        if (user) {
+            return await this.externalService.getUserByUsername(user.username);
+        }
+        return null;
     }
 
 

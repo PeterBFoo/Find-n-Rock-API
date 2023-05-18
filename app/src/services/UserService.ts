@@ -27,7 +27,7 @@ export class UserService implements Service {
             where: {
                 username: username
             },
-            relations: ["role"]
+            relations: ["role", "musicalGenres"]
         });
     }
 
