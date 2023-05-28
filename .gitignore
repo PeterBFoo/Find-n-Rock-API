@@ -4,3 +4,9 @@ dist/
 data/
 node_modules
 package-lock.json
+coverage/
+.idea/
+.DS_Store
+cert.pem
+csr.pem
+key.pem
