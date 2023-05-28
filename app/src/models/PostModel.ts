@@ -57,6 +57,7 @@ export class PostModel implements PostInterface {
         name: "SelectedCandidates",
     })
     selectedCandidates: UserModel[];
+    post: any;
 
     constructor(title: string, subtitle: string, date: Date, body: string, userId: number, genres: Tags[], image: string | null = null, suscriptions: UserModel[], selectedCandidates: UserModel[], country: string, region: string, city: string) {
         this.title = title;

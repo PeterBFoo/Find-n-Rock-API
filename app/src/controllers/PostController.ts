@@ -42,7 +42,6 @@ export class PostController {
         try {
             let id = parseInt(req.params.id);
             const post = await this.postService.getPostById(id);
-
             post ? res.status(200).send(post) : res.status(404).send({ error: Constants.POSTS_NOT_FOUND });
 
         } catch (error) {
@@ -59,6 +58,19 @@ export class PostController {
             res.status(404).send(Constants.USER_NOT_FOUND);
         }
     }
+
+    async getChosenPostsOfUser(req: Request, res: Response) {
+        const user = await this.loginService.getUserInRequest(req);
+        if (!user) return res.status(401).send({ error: Constants.UNAUTHORIZED });
+
+        if (user.role.canSubscribe) {
+            let response = await this.postService.getChosenPostsOfUser(user);
+            return res.status(200).send(response);
+        }
+
+        return res.status(403).send({ error: Constants.FORBIDDEN });
+    }
+
 
     async createPost(req: Request, res: Response) {
         try {
@@ -111,9 +123,15 @@ export class PostController {
                     return res.status(400).send(Constants.GENRES_INVALID)
                 }
 
-                PostModel.getEditableFields().forEach((key) => {
+                PostModel.getEditableFields().forEach(async (key) => {
                     let value = req.body[key];
-                    if (value != post[key] && value != undefined) {
+                    if (key == "genres" && value.length > 0) {
+                        try {
+                            post[key] = await this.musicGenreService.getMusicGenresByName(value)
+                        } catch (e) {
+                        }
+                    }
+                    else if (value != post[key] && value != undefined) {
                         post[key] = value;
                     }
                 })
@@ -264,7 +282,10 @@ export class PostController {
             } else if (user.role.name == Constants.ROLE_MUSIC_GROUP) {
                 var response = await this.postService.getHistoryPostsOfMusicalGroup(user);
 
-            } else {
+            } else if (user.role.name == "admin") {
+                var response = await this.postService.getHistoryPostsOfEntrepreneur(user);
+            }
+            else {
                 return res.status(401).send(Constants.POSTS_HISTORY_NOT_ALLOWED)
             }
 

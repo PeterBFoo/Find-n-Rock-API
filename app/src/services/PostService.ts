@@ -46,36 +46,20 @@ export class PostService implements Service {
      */
     async getFilteredPosts(filters: any): Promise<PostModel[] | []> {
         if (filters.genres != undefined) {
-            let query = this.repository.createQueryBuilder('post')
             const desiredGenres = await this.genreservice.getMusicGenresByName(filters.genres);
 
             if (desiredGenres.length === 0) {
                 return [];
+            } else {
+                filters.genres = desiredGenres;
             }
-
-            query = query.leftJoinAndSelect('post.genres', 'genres')
-                .where('genres.id IN (:...ids)', { ids: desiredGenres.map(genre => genre.id) })
-                .andWhere('post.active = :active', { active: true })
-                .leftJoinAndSelect('post.user', 'user')
-                .leftJoinAndSelect('post.suscriptions', 'suscriptions')
-
-            // Remove the genres from the filters to avoid filtering by them and not altering the original data by reference
-            let filtersWithoutGenres: any = new Object(filters);
-            filtersWithoutGenres.genres = undefined;
-
-            for (const [key, value] of Object.entries(filtersWithoutGenres)) {
-                if (value) {
-                    query = query.andWhere(`post.${key} = :${key}`, { [key]: value })
-                }
-            }
-
-            query = query.andWhere('post.active = :active', { active: true })
-
-            return await query.getMany();
         }
 
         return await this.repository.find({
-            where: filters,
+            where: {
+                ...filters,
+                active: true
+            },
             relations: ["user", "genres", "suscriptions"]
         });
     }
@@ -120,6 +104,14 @@ export class PostService implements Service {
             .addSelect(['suscriptions.username', 'suscriptions.phone', 'suscriptions.email'])
             .leftJoinAndSelect('post.genres', 'genres')
             .andWhere('post.user = :id', { id: user.id })
+            .getMany();
+    }
+
+
+    async getChosenPostsOfUser(user: UserInterface) {
+        return await this.repository.createQueryBuilder('post')
+            .leftJoinAndSelect('post.selectedCandidates', 'selectedCandidates')
+            .where('selectedCandidates.id = :id', { id: user.id })
             .getMany();
     }
 
@@ -231,6 +223,7 @@ export class PostService implements Service {
     async getSuscribedPostsOfUser(user: UserModel) {
         return await this.repository.createQueryBuilder('post')
             .leftJoin('post.suscriptions', 'suscriptions')
+            .leftJoinAndSelect('post.user', 'user')
             .leftJoinAndSelect('post.genres', 'genres')
             .andWhere('suscriptions.id = :id', { id: user.id })
             .andWhere('post.active = :active', { active: true })
