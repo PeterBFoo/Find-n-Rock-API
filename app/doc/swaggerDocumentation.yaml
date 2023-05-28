@@ -6,8 +6,8 @@ info:
   license:
     name: MIT
 servers:
+  - url: https://findnrock.tech/api/ # Production
   - url: http://localhost:3000/ # Development
-  - url: http://localhost:8000/ # Production
 paths:
   /api/login:
     post:
@@ -130,6 +130,20 @@ paths:
       responses:
         "200":
           description: All the active posts that acomplishes the conditions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Post"
+
+  /api/auth/posts/suscriptions/chosen:
+    get:
+      summary: Get the posts where user has been selected
+      tags:
+        - Post
+
+      responses:
+        "200":
+          description: Posts where user has been selected
           content:
             application/json:
               schema:
