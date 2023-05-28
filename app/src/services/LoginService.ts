@@ -51,7 +51,7 @@ export class LoginService implements ExtendedService {
      * @returns User object if the token is valid, null otherwise
      */
     async getUserInRequest(req: Request): Promise<UserModel | null> {
-        let token = req.cookies["auth-token"];
+        let token = req.cookies["auth-token"] || req.headers["auth-token"];
         let user: any = jwt.decode(token)
         if (user) {
             return await this.externalService.getUserByUsername(user.username);

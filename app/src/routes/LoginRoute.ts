@@ -5,10 +5,6 @@ const LoginController = loginController.getInstance();
 const router = Router();
 
 router.post('/login', async (req: Request, res: Response) => {
-    if (req.cookies["auth-token"] != null) {
-        return res.status(400).send('You are already logged in');
-    }
-
     return LoginController.login(req, res);
 });
 

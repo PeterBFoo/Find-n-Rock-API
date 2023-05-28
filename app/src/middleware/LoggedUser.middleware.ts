@@ -7,7 +7,7 @@ export class LoggedUser {
 
     rejectIfNotLoggedIn(req: Request, res: Response, next: Function) {
         function isLoggedUser(req: Request) {
-            let token = req.cookies["auth-token"];
+            let token = req.cookies["auth-token"] || req.headers["auth-token"];
             return token != null ? jwt.verify(token, envConfig.getSecretKey()) : false;
         }
 
