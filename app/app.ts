@@ -6,6 +6,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { LoggedUser } from './src/middleware/LoggedUser.middleware';
 const loggedUserMiddleware = new LoggedUser().rejectIfNotLoggedIn;
+import https from 'https';
 
 // ROUTES //
 import login from './src/routes/LoginRoute';
@@ -55,9 +56,18 @@ if (envConfig.NODE_ENV != "test") {
         })
         .catch((error) => console.log("Database connection error: ", error));
 
-    app.listen(port, () => {
-        console.log(`Server is running at http://localhost:${port}`);
-    });
+    if (envConfig.NODE_ENV == "prod") {
+        https.createServer({
+            key: fs.readFileSync(path.join(__dirname, "..", "./app/cert/key.pem")),
+            cert: fs.readFileSync(path.join(__dirname, "..", "./app/cert/cert.pem"))
+        }, app).listen(port, () => {
+            console.log(`Server is running at https://localhost:${port}`);
+        });
+    } else {
+        app.listen(port, () => {
+            console.log(`Server is running at http://localhost:${port}`);
+        });
+    }
 }
 
 export default app;

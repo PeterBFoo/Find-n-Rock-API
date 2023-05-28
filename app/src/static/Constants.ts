@@ -32,5 +32,6 @@ export enum Constants {
     GENRES_DELETED = "Genre deleted",
     GENRES_CREATION_NOT_ALLOWED = "You don't have permission to create genres",
     GENRES_IN_USE = "This genre is in use, you can't delete it",
-    UNAUTHORIZED = "You first have to login in order to access to this service. If you are already logged in, please logout and login again"
+    UNAUTHORIZED = "You first have to login in order to access to this service. If you are already logged in, please logout and login again",
+    FORBIDDEN = "You don't have permission to access to this service",
 }
