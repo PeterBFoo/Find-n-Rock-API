@@ -4,6 +4,7 @@ import { RoleModel } from "../../models/RoleModel";
 import { MusicalGenreModel } from "../../models/MusicGenreModel";
 import { PostModel } from "../../models/PostModel";
 import { UserModel } from "../../models/UserModel";
+import genres from "../../static/Genres";
 
 export class DataBaseSeeder implements MigrationInterface {
     roleRepository = connection.getRepository(RoleModel);
@@ -22,9 +23,16 @@ export class DataBaseSeeder implements MigrationInterface {
         await this.roleRepository.save([entrepreneourRole, musicalGroupRole, adminRole]);
 
         // music genres
+        let genresArray: string[] = genres;
+        let musicalGenres: MusicalGenreModel[] = [];
+        genresArray.forEach(genre => {
+            musicalGenres.push(new MusicalGenreModel(genre))
+        });
+
         let rock = new MusicalGenreModel("Rock");
         let blues = new MusicalGenreModel("Blues");
 
+        await this.musicalGenreRepository.save(musicalGenres)
         await this.musicalGenreRepository.save([rock, blues])
 
         //users
