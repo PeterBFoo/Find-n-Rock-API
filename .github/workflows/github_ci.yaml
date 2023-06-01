@@ -40,7 +40,7 @@ jobs:
           SSH_KEY: ${{ secrets.SSH_KEY }}
 
       - name: Update Server's Docker Image
-        run: ssh -o StrictHostKeyChecking=no -i ~/.ssh/ssh_key "$SSH_USER@$SSH_HOST" 'docker-compose pull peterbfoo/find-n-rock-back && docker-compose up -d --no-deps root-back-1'
+        run: ssh -o StrictHostKeyChecking=no -i ~/.ssh/ssh_key "$SSH_USER@$SSH_HOST" 'docker compose pull peterbfoo/find-n-rock-back && docker-compose up -d --no-deps root-back-1'
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_HOST: ${{ secrets.HOST }}
