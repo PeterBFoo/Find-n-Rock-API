@@ -8,7 +8,7 @@
     "deploy": "sudo docker build -t peterbfoo/find-n-rock-back .",
     "test": "cross-env NODE_ENV=test && npm run drop:test && npm run seed:test && jest --forceExit --detectOpenHandles --runInBand",
     "test:build": "cross-env NODE_ENV=test && npm run build && npm run drop:test && npm run seed:test && jest --forceExit --detectOpenHandles --runInBand",
-    "start": "cross-env Node_ENV=prod && nodemon dist/app.js",
+    "start": "cross-env NODE_ENV=prod && nodemon dist/app.js",
     "start:prod": "cross-env NODE_ENV=prod pm2 start dist/app.js --name find-n-rock-api",
     "dev": "cross-env NODE_ENV=dev concurrently \"npx tsc --watch\" \"nodemon -q dist/app.js\"",
     "seed:prod": "cross-env NODE_ENV=prod concurrently \"npx tsc\" \"node dist/src/db/runSeeders.js\"",
