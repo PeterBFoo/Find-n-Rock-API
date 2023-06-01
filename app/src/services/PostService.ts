@@ -205,14 +205,25 @@ export class PostService implements Service {
      * Sends an email to the selected candidates of the post
      */
     private async sendMailToCandidates(candidates: UserModel[], postOwner: UserModel) {
+        let candidatesHtml = `<h2>¡Congratulations!</h2><p>You have been selected as a candidate to a job offer. The information details about the entrepreneur are here:</p><ul><li>Address: ${postOwner.address}</li><li>Email: ${postOwner.email}</li><li>Phone number: ${postOwner.phone}</li></ul><br><p>The entrepreneur will contact you as well, if you have any problem, please respond to findnrock@gmail.com.</p>`;
+
+        let postOwnerHtml = `<h2>Your post has now arrived to his final destination</h2>
+        <p>Thank you for using our application, we have sent an email to the selected candidate or candidates with your own personal information. We will refer here the information about the chosen candidates:</p><ul><h4>Candidates</h4>`;
+
         let candidatesEmail: string[] = []
         candidates.forEach(async (candidate) => {
             candidatesEmail.push(candidate.email)
+            postOwnerHtml += `<li>Username: ${candidate.username}</li>`
+            postOwnerHtml += `<li>Name: ${candidate.name}</li>`
+            postOwnerHtml += `<li>Email: ${candidate.email}</li>`
+            postOwnerHtml += `<li>Phone number: ${candidate.phone}</li>`
+            postOwnerHtml += `<hr>`
         })
 
-        let html = `<h2>¡Congratulations!</h2><p>You have been selected as a candidate of a job offer. The information details about the entrepreneur are here:</p><ul><li>Address: ${postOwner.address}</li><li>Email: ${postOwner.email}</li><li>Phone number: ${postOwner.phone}</li></ul><br><p>The entrepreneur will contact you as well, if you have any problem, please respond to findnrock@gmail.com.</p>`;
+        postOwnerHtml += `<h5>If you have any problem, please feel free to ask send an email to findnrock@gmail.com</h5>`
 
-        await this.mailSender.sendMultipleMails(candidatesEmail, "¡Congratulations! You have been selected", html);
+        await this.mailSender.sendMultipleMails(candidatesEmail, "¡Congratulations! You have been selected", candidatesHtml);
+        await this.mailSender.sendMail(postOwner.email, "Information about your recently closed post", postOwnerHtml)
     }
 
     /**
