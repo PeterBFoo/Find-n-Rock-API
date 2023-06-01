@@ -210,7 +210,7 @@ export class PostService implements Service {
             candidatesEmail.push(candidate.email)
         })
 
-        let html = "<h2>Congratulations</h2><p>You have been selected as a candidate of a job offer. The information details about the entrepreneur are here:</p><ul><li>Email:" + postOwner.email + "</li></ul>";
+        let html = `<h2>¡Congratulations!</h2><p>You have been selected as a candidate of a job offer. The information details about the entrepreneur are here:</p><ul><li>Address: ${postOwner.address}</li><li>Email: ${postOwner.email}</li><li>Phone number: ${postOwner.phone}</li></ul><br><p>The entrepreneur will contact you as well, if you have any problem, please respond to findnrock@gmail.com.</p>`;
 
         await this.mailSender.sendMultipleMails(candidatesEmail, "¡Congratulations! You have been selected", html);
     }
