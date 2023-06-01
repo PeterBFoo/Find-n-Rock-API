@@ -12,8 +12,11 @@
     "start:prod": "cross-env NODE_ENV=prod pm2 start dist/app.js --name find-n-rock-api",
     "dev": "cross-env NODE_ENV=dev concurrently \"npx tsc --watch\" \"nodemon -q dist/app.js\"",
     "seed:prod": "cross-env NODE_ENV=prod concurrently \"npx tsc\" \"node dist/src/db/runSeeders.js\"",
-    "seed:dev": "cross-env NODE_ENV=dev concurrently \"npx tsc\" \"node dist/src/db/runSeeders.js\"",
+    "seed:dev": "cross-env NODE_ENV=dev concurrently \"npx tsc\" \"node dist/src/db/runSeedersProd.js\"",
+    "reseed:dev": "npm run drop:dev && npm run seed:dev",
+    "reseed:prod": "npm run drop:prod && npm run seed:prod",
     "drop:dev": "cross-env NODE_ENV=dev concurrently \"npx tsc\" \"node dist/src/db/dropTables.js\"",
+    "drop:prod": "cross-env NODE_ENV=prod concurrently \"npx tsc\" \"node dist/src/db/dropTables.js\"",
     "seed:test": "cross-env NODE_ENV=test node dist/src/db/runSeeders.js",
     "drop:test": "cross-env NODE_ENV=test node dist/src/db/dropTables.js"
   },
