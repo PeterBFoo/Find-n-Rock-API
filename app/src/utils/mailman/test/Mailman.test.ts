@@ -9,7 +9,7 @@ test("Send an email", async () => {
         path: path.join(__dirname, "..", ".env")
     })
 
-    let mailman = new Mailman(process.env.API_KEY || "we are doomed to fail", process.env.MAIL || "test@test.com")
+    let mailman = new Mailman(process.env.API_KEY || "we are doomed to fail", process.env.MAIL || "test@test.com", true)
     try {
         await mailman.sendMail("borrasexposito@gmail.com", "Test jest", "Hello!")
         await delay(8000)
@@ -24,7 +24,7 @@ test("Send multiple emails", async () => {
         path: path.join(__dirname, "..", ".env")
     })
 
-    let mailman = new Mailman(process.env.API_KEY || "we are doomed to fail", process.env.MAIL || "test@test.com")
+    let mailman = new Mailman(process.env.API_KEY || "we are doomed to fail", process.env.MAIL || "test@test.com", true)
     try {
         await mailman.sendMultipleMails(["borrasexposito@gmail.com"], "Test jest", "Hello!")
         await delay(8000)

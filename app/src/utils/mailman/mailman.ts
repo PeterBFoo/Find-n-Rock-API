@@ -5,11 +5,13 @@ export class Mailman {
     private api_key: string
     private fromMail: string
     private mailService: MailService
+    private log: boolean
 
-    constructor(apiKey: string, fromMail: string) {
+    constructor(apiKey: string, fromMail: string, log: boolean = false) {
         this.api_key = apiKey
         this.fromMail = fromMail
         this.mailService = mail
+        this.log = log
 
         this.mailService.setApiKey(this.api_key);
     }
@@ -30,9 +32,8 @@ export class Mailman {
 
         this.mailService.send(message)
             .then(() => {
-                console.log("Email sent successfully")
             }).catch(error => {
-                console.log(error);
+                if (this.log) console.log("Error when trying to deliver unique mail: ", error);
             })
     }
 
@@ -46,9 +47,8 @@ export class Mailman {
 
         this.mailService.sendMultiple(message)
             .then(() => {
-                console.log("Emails sent successfully")
             }).catch(error => {
-                console.log(error);
+                if (this.log) console.log("Error when trying to deliver mails: ", error);
             })
     }
 }

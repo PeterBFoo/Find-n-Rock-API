@@ -70,7 +70,6 @@ export class UserController {
             return response ? res.status(200).clearCookie("auth-token").send(response) :
                 res.status(400).send(Constants.BAD_REQUEST)
         } catch (e) {
-            console.log(e)
             return res.status(500).send(e);
         }
     }
