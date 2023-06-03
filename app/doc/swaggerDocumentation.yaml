@@ -22,8 +22,8 @@ paths:
             schema:
               $ref: "#/components/schemas/User"
             example:
-              username: admin
-              password: admin
+              username: username
+              password: password
 
       responses:
         "200":
@@ -51,7 +51,7 @@ paths:
 
       responses:
         "200":
-          description: Log out successfully, removes the cookie 'auth-token'
+          description: Logged out successfully, removes the cookie 'auth-token'
           content:
             application/json:
               schema:
@@ -65,7 +65,7 @@ paths:
       tags:
         - User
       requestBody:
-        description: Creates a new user
+        description: Creates a new user. If the user is an entrepreneur, the integrants and musicalGenres are not needed.
         required: true
         content:
           application/json:
@@ -94,12 +94,9 @@ paths:
         "400":
           description: Could be a bad request (doesn't have all the needed params), couldn't find the role, the user exists or the email is already registered.
 
-        "info":
-          description: In order to create an entrepreneur, remove the integrants and musicalGenres and change the value of role to "entrepreneur"
-
   /api/auth/posts:
     get:
-      summary: Get all the active posts, they can be filtered by country, region, city and genres.
+      summary: Get all the active posts, they can be filtered by country, region, city and genres. The genres are separated by commas, and all the filters are accumulative.
       tags:
         - Post
       parameters:
@@ -195,7 +192,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Post"
         "400":
-          description: ID is not valid (a number)
+          description: ID is not valid (NaN)
           content:
             application/json:
               schema:
@@ -209,7 +206,7 @@ paths:
 
   /api/auth/posts/create:
     post:
-      summary: Creates a new post, only entrepreneurs can create posts
+      summary: Creates a new post, only entrepreneurs can create posts.
       tags:
         - Post
       requestBody:
@@ -237,7 +234,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Post"
         "400":
-          description: Post parameters are not valid or not all the necessary are in the request
+          description: Post parameters are not valid or not all the requested are in the body
           content:
             application/json:
               schema:
@@ -674,7 +671,7 @@ paths:
       tags:
         - MusicGenre
       requestBody:
-        description: Creates a new music genre, only the admin can do this action
+        description: Creates a new music genre, only can be done by the user with the admin role
         required: true
         content:
           application/json:
@@ -811,28 +808,25 @@ components:
         - date
         - userId
         - genres
-        - suscriptions
         - country
-        - region
-        - city
         - active
 
       properties:
         title:
           type: string
-          description: Post title
+          description: Post title or name of the event.
 
         subtitle:
           type: string
-          description: Post subtitle
+          description: Post subtitle or short description.
 
         body:
           type: string
-          description: Post body/description
+          description: Post body/description of the event.
 
         date:
           type: Date
-          description: Date of creation of the post
+          description: Date of creation of the post.
 
         userId:
           type: number
@@ -841,33 +835,32 @@ components:
         genres:
           $ref: "#/components/schemas/MusicGenre"
           type: MusicGenre[]
-          description: List of music genres
+          description: List of music genres that are related to the post.
 
         suscriptions:
           $ref: "#/components/schemas/User"
           type: User[]
-          description: Suscribed users of the post
+          description: Suscribed users list, only the owner can see this list.
 
         country:
           type: string
-          description: Country where the event is going to happen
+          description: Country where the event is going to happen.
 
         region:
           type: string
-          description: Region where the event is going to happen
+          description: Region where the event is going to happen.
 
         city:
           type: string
-          description: City where the event is going to happen
+          description: City where the event is going to happen.
 
         active:
           type: boolean
-          description: Determines if the post is active or not
+          description: Determines if the post is active or not. If it's not active, it won't be shown in the posts list, and only the owner can see it. This variable is determined by the API and can't be modified manually.
 
     Role:
       type: object
       required:
-        - id
         - name
         - canManagePosts
         - canSuscribe
@@ -884,28 +877,27 @@ components:
 
         canManagePosts:
           type: boolean
-          description: Determines if user can create, modify or delete posts
+          description: Determines if user can create, modify or delete posts.
 
         canSuscribe:
           type: boolean
-          description: Determines if user can suscribe or unsuscribe to posts
+          description: Determines if user can suscribe or unsuscribe to posts.
 
         canCreateRoles:
           type: boolean
-          description: Determines if user can create roles
+          description: Determines if user can create roles or not.
 
     MusicGenre:
       type: object
 
       required:
-        - id
         - name
 
       properties:
         id:
           type: number
-          description: Music genre ID
+          description: Music genre ID.
 
         name:
           type: string
-          description: Name of the genre
+          description: Name of the music genre.
