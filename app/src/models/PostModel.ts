@@ -80,7 +80,7 @@ export class PostModel implements PostInterface {
     }
 
     static getMandatoryFields(): string[] {
-        return ['title', 'subtitle', 'body', 'genres', 'country', 'region', 'city'];
+        return ['title', 'subtitle', 'body', 'genres', 'country'];
     }
 
     static isValidPost(post: any): boolean {
