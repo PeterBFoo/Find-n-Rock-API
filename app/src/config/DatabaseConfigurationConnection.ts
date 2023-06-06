@@ -37,14 +37,15 @@ class Config {
         this.LOGGING = process.env.LOGGING === "true";
         this.SECRET_KEY = process.env.SECRET_KEY || "secret";
         this.ALLOWED_SERVER = process.env.ALLOWED_SERVER || "http://localhost:4200";
+        this.MAIL = process.env.MAIL || "findnrock@gmail.com"
 
         if (process.env.MAIL_API_KEY == undefined) {
-            throw new Error("Couldn't get the correct key for the mail API")
+            console.log("Couldn't get the correct key for the mail API");
+            this.MAIL_API_KEY = "";
         } else {
             this.MAIL_API_KEY = process.env.MAIL_API_KEY
         }
 
-        this.MAIL = process.env.MAIL = "findnrock@gmail.com"
     }
 
     getPort(): number {
