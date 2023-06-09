@@ -38,15 +38,15 @@ export class UserController {
     }
 
     async getProfiles(req: Request, res: Response) {
-        const profileType = req.query["type"]
-        console.log(profileType)
-        if (!profileType) return res.status(400).send(Constants.PROFILE_ERROR);
+        const queryString = req.query as any
+        const filters = this.getFiltersOf(queryString);
+        if (!filters.type) return res.status(400).send(Constants.PROFILE_ERROR);
 
-        if (profileType == Constants.ROLE_ENTREPRENEOUR) {
+        if (filters.type == Constants.ROLE_ENTREPRENEOUR) {
             let entrepreneurs = await this.userService.getProfilesEntrepreneur()
             return res.status(200).send(entrepreneurs);
-        } else if (profileType == Constants.ROLE_MUSIC_GROUP) {
-            let groups = await this.userService.getProfilesArtists()
+        } else if (filters.type == Constants.ROLE_MUSIC_GROUP) {
+            let groups = await this.userService.getProfilesArtists(filters)
             return res.status(200).send(groups)
         }
 
@@ -94,5 +94,13 @@ export class UserController {
     private async doesEmailExist(req: Request) {
         const email = req.body["email"];
         return email != undefined ? await this.userService.emailExists(email) : false;
+    }
+
+    private getFiltersOf(queryString: any) {
+        return {
+            type: queryString.type,
+            country: queryString.country || "",
+            genre: queryString.genre || ""
+        }
     }
 }

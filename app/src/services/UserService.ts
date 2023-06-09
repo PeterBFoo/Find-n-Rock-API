@@ -2,10 +2,12 @@ import connection from '../db/dataSource';
 import { Service } from './interfaces/Service';
 import { UserModel } from '../models/UserModel';
 import { Repository } from 'typeorm';
+import { MusicGenreService } from './MusicGenreService';
 
 export class UserService implements Service {
     private static instance: UserService;
     repository: Repository<UserModel> = connection.getRepository(UserModel);
+    private genreservice: MusicGenreService = MusicGenreService.getInstance();
 
     private constructor() { }
 
@@ -73,13 +75,37 @@ export class UserService implements Service {
             .getMany();
     }
 
-    async getProfilesArtists(): Promise<UserModel[]> {
+    async getProfilesArtists(filters: {
+        type: string,
+        genre: any,
+        country: string
+    }): Promise<UserModel[]> {
 
-        return await this.repository.createQueryBuilder("user")
+        let users = await this.repository.createQueryBuilder("user")
             .leftJoinAndSelect("user.musicalGenres", "genres")
             .leftJoinAndSelect("user.role", "role")
             .where("role.canSubscribe = :active", { active: true })
-            .getMany();
+            .getMany()
+
+        if (filters.genre || filters.country) {
+            let filteredUsers: UserModel[] = [];
+            users.forEach((user) => {
+                if (filters.genre) {
+                    for (let i = 0; i < user.musicalGenres!.length; i++) {
+                        const genre = user.musicalGenres![i];
+                        if (genre.name == filters.genre) filteredUsers.push(user)
+                    }
+                } else if (filters.country) {
+                    if (filters.country == user.country) filteredUsers.push(user);
+                }
+            })
+
+            return filteredUsers;
+        }
+
+
+
+        return users;
     }
 }
 
