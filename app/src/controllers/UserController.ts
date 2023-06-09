@@ -37,6 +37,23 @@ export class UserController {
         return user ? res.status(200).send(user) : res.status(404).send(Constants.USER_NOT_FOUND)
     }
 
+    async getProfiles(req: Request, res: Response) {
+        const profileType = req.query["type"]
+        console.log(profileType)
+        if (!profileType) return res.status(400).send(Constants.PROFILE_ERROR);
+
+        if (profileType == Constants.ROLE_ENTREPRENEOUR) {
+            let entrepreneurs = await this.userService.getProfilesEntrepreneur()
+            return res.status(200).send(entrepreneurs);
+        } else if (profileType == Constants.ROLE_MUSIC_GROUP) {
+            let groups = await this.userService.getProfilesArtists()
+            return res.status(200).send(groups)
+        }
+
+        return res.status(404).send(Constants.PROFILE_NOT_FOUND)
+
+    }
+
     async editProfile(req: Request, res: Response) {
         try {
             let user: any = await this.loginService.getUserInRequest(req);

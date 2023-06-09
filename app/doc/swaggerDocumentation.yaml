@@ -94,6 +94,41 @@ paths:
         "400":
           description: Could be a bad request (doesn't have all the needed params), couldn't find the role, the user exists or the email is already registered.
 
+  /api/auth/profiles:
+    get:
+      summary: Get all the profiles specified by the user type.
+      tags:
+        - User
+      parameters:
+        - name: type
+          in: query
+          description: To get all the entrepreneurs, value must be 'entrepreneur', to get all the music groups, value must be 'group'.
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Get all the requested profiles with that are specified in the type of user.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+        "400":
+          description: The type parameter is empty or invalid.
+          content:
+            application/json:
+              schema:
+                message: Error
+
+        "404":
+          description: The type parameter has no match with any of the available user types.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
   /api/auth/posts:
     get:
       summary: Get all the active posts, they can be filtered by country, region, city and genres. The genres are separated by commas, and all the filters are accumulative.

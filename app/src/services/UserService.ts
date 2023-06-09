@@ -65,5 +65,21 @@ export class UserService implements Service {
     async editProfile(user: UserModel): Promise<UserModel | null> {
         return await this.repository.save(user);
     }
+
+    async getProfilesEntrepreneur(): Promise<UserModel[]> {
+        return await this.repository.createQueryBuilder("user")
+            .leftJoinAndSelect("user.role", "role")
+            .where("role.canManagePosts = :active", { active: true })
+            .getMany();
+    }
+
+    async getProfilesArtists(): Promise<UserModel[]> {
+
+        return await this.repository.createQueryBuilder("user")
+            .leftJoinAndSelect("user.musicalGenres", "genres")
+            .leftJoinAndSelect("user.role", "role")
+            .where("role.canSubscribe = :active", { active: true })
+            .getMany();
+    }
 }
 

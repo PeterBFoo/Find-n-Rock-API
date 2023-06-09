@@ -34,4 +34,6 @@ export enum Constants {
     GENRES_IN_USE = "This genre is in use, you can't delete it",
     UNAUTHORIZED = "You first have to login in order to access to this service. If you are already logged in, please logout and login again",
     FORBIDDEN = "You don't have permission to access to this service",
+    PROFILE_NOT_FOUND = "Profile type not found",
+    PROFILE_ERROR = "A type of user is required to get the profiles"
 }
