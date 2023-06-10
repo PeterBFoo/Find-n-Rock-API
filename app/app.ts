@@ -15,8 +15,9 @@ import post from './src/routes/PostRoute';
 import user from './src/routes/UserRoute';
 import genres from './src/routes/MusicGenresRoute';
 import genresAuth from './src/routes/MusicGenresAuthRoute';
+import workExperience from './src/routes/WorkExperienceRoute';
 const noAuthRoutes = [login, register, genres]
-const authRoutes = [post, user, genresAuth]
+const authRoutes = [post, user, genresAuth, workExperience]
 
 // DB //
 import envConfig from './src/config/DatabaseConfigurationConnection';

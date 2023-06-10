@@ -4,6 +4,7 @@ import { UserModel } from "../models/UserModel"
 import { MusicalGenreModel } from "../models/MusicGenreModel"
 import { PostModel } from "../models/PostModel"
 import { RoleModel } from "../models/RoleModel"
+import { WorkExperienceModel } from "../models/WorkExperienceModel"
 
 const AppDataSource = new DataSource({
     type: envConfig.getDbType(),
@@ -16,7 +17,8 @@ const AppDataSource = new DataSource({
         RoleModel,
         MusicalGenreModel,
         UserModel,
-        PostModel
+        PostModel,
+        WorkExperienceModel
     ],
     synchronize: envConfig.getSynchronize(),
     logging: envConfig.getLogging(),

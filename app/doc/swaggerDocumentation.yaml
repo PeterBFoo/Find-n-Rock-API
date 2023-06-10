@@ -9,6 +9,127 @@ servers:
   - url: https://findnrock.tech/api/ # Production
   - url: http://localhost:3000/ # Development
 paths:
+  /api/auth/get/experiences:
+    get:
+      summary: Get all the working experiences of the user
+      tags:
+        - WorkExperience
+
+      responses:
+        "200":
+          description: All the work experiences of the user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkExperience"
+
+  /api/auth/create/experience:
+    post:
+      summary: Create a new working experience
+      tags:
+        - WorkExperience
+      requestBody:
+        description: Create a new working experience
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkExperience"
+            example:
+              description: My description
+              initialDate: 06/06/2006
+              endDate: 06/06/2006
+              name: Name of the experience
+              enterprise: Name of the enterprise
+              country: Country of the enterprise
+              region: Region of the enterprise
+              city: City of the enterprise
+
+      responses:
+        "201":
+          description: Work experience created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkExperience"
+        "400":
+          description: Could be a bad request (doesn't have all the needed params), the user doesn't exist or the user.
+
+  /api/auth/update/experience/{id}:
+    put:
+      summary: Update a working experience
+      tags:
+        - WorkExperience
+      parameters:
+        - name: id
+          in: path
+          description: ID of the working experience
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update a working experience
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkExperience"
+            example:
+              description: My description
+              initialDate: 06/06/2006
+              endDate: 06/06/2006
+              name: Name of the experience
+              enterprise: Name of the enterprise
+              country: Country of the enterprise
+              region: Region of the enterprise
+              city: City of the enterprise
+
+      responses:
+        "200":
+          description: Work experience updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkExperience"
+        "304":
+          description: The work experience is the same as the one in the database
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkExperience"
+
+        "400":
+          description: Could be a bad request (doesn't have all the needed params), the user doesn't exist or the user.
+
+        "404":
+          description: The work experience doesn't exist
+
+  /api/auth/delete/experience/{id}:
+    delete:
+      summary: Delete a working experience
+      tags:
+        - WorkExperience
+      parameters:
+        - name: id
+          in: path
+          description: ID of the working experience
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Work experience deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkExperience"
+        "400":
+          description: Could be a bad request (doesn't have all the needed params), the user doesn't exist or the user.
+
+        "404":
+          description: The work experience doesn't exist
+
   /api/login:
     post:
       summary: Log in to the user account
@@ -785,6 +906,51 @@ paths:
 
 components:
   schemas:
+    WorkExperience:
+      type: object
+      required:
+        - name
+        - enterprise
+        - description
+        - initialDate
+        - endDate
+        - country
+        - region
+        - city
+
+      properties:
+        name:
+          type: string
+          description: Work experience name
+
+        enterprise:
+          type: string
+          description: Work experience enterprise
+
+        description:
+          type: string
+          description: Work experience description
+
+        initialDate:
+          type: Date
+          description: Work experience initial date
+
+        endDate:
+          type: Date
+          description: Work experience end date
+
+        country:
+          type: string
+          description: Work experience country
+
+        region:
+          type: string
+          description: Work experience region
+
+        city:
+          type: string
+          description: Work experience city
+
     User:
       type: object
       required:
