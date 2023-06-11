@@ -14,7 +14,7 @@ afterAll(async () => {
     if (dataSource.isInitialized) await dataSource.destroy();
 });
 
-describe("GET /api/auth/get/experiences", () => {
+describe("GET /api/auth/get/experiences/admin", () => {
 
     it("should return 200 OK", async () => {
         let userToken = await request(app)
@@ -29,7 +29,7 @@ describe("GET /api/auth/get/experiences", () => {
             });
 
         const response = await request(app)
-            .get("/api/auth/get/experiences")
+            .get("/api/auth/get/experiences/admin")
             .set("Cookie", [`auth-token=${userToken}`])
 
 
@@ -65,7 +65,7 @@ describe("GET /api/auth/get/experiences", () => {
         expect(response.status).toBe(201);
 
         const response2 = await request(app)
-            .get("/api/auth/get/experiences")
+            .get("/api/auth/get/experiences/admin")
             .set("Cookie", [`auth-token=${userToken}`])
 
         expect(response2.status).toBe(200);

@@ -3,7 +3,7 @@ import { WorkExperienceController } from '../controllers/WorkExperienceControlle
 const router = Router();
 const workExperienceController = WorkExperienceController.getInstance();
 
-router.get('/get/experiences', (req: Request, res: Response) => {
+router.get('/get/experiences/:username', (req: Request, res: Response) => {
     return workExperienceController.getWorkExperiencesByUserId(req, res);
 });
 

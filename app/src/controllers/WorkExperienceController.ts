@@ -39,10 +39,13 @@ export class WorkExperienceController {
     }
 
     async getWorkExperiencesByUserId(req: Request, res: Response) {
-        let user = await this.loginService.getUserInRequest(req);
-        let experiences = await this.workExperienceService.getWorkExperiencesByUserId(user!.id);
+        let user = req.params.username;
+        if (user) {
+            let experiences = await this.workExperienceService.getWorkExperiencesByUserId(user);
+            return res.status(200).send(experiences);
+        }
 
-        return res.status(200).send(experiences);
+        return res.status(404).send("User not found");
     }
 
     async updateWorkExperience(req: Request, res: Response) {
@@ -97,16 +100,20 @@ export class WorkExperienceController {
 
     private convertStringToDate(date: string): Date {
         let newDate = new Date();
-        date.split("/").forEach((value: string, index: number) => {
+        date.split(/[\/-]/).forEach((value: string, index: number) => {
             if (index == 0) {
-                newDate.setMonth(parseInt(value) - 1);
-            } else if (index == 1) {
-                newDate.setDate(parseInt(value));
-            } else {
                 newDate.setFullYear(parseInt(value));
+            } else if (index == 1) {
+                newDate.setMonth(parseInt(value) - 1);
+            } else {
+                newDate.setDate(parseInt(value));
             }
         });
 
         return newDate;
+    }
+
+    private areDatesValid(initialDate: Date, endDate: Date): boolean {
+        return initialDate.getTime() <= endDate.getTime();
     }
 }

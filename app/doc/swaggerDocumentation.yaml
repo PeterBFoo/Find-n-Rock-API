@@ -9,11 +9,19 @@ servers:
   - url: https://findnrock.tech/api/ # Production
   - url: http://localhost:3000/ # Development
 paths:
-  /api/auth/get/experiences:
+  /api/auth/get/experiences/{username}:
     get:
       summary: Get all the working experiences of the user
       tags:
         - WorkExperience
+
+      parameters:
+        - name: username
+          in: path
+          description: Username of the user.
+          required: true
+          schema:
+            type: string
 
       responses:
         "200":

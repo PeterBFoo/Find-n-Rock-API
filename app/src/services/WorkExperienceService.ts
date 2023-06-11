@@ -18,12 +18,11 @@ export class WorkExperienceService implements Service {
         return WorkExperienceService.instance;
     }
 
-    async getWorkExperiencesByUserId(userId: number): Promise<WorkExperienceModel[] | null> {
-        return await this.repository.find({
-            where: {
-                user: userId
-            }
-        })
+    async getWorkExperiencesByUserId(username: string): Promise<WorkExperienceModel[] | null> {
+        return await this.repository.createQueryBuilder("workExperience")
+            .leftJoin("workExperience.user", "user")
+            .where("user.username = :username", { username: username })
+            .getMany();
     }
 
     async getWorkExperienceById(user: UserModel, workExperienceId: number): Promise<WorkExperienceModel | null> {
