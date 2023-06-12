@@ -9,7 +9,9 @@
     -   [**API architecture**](#api-architecture)
     -   [**Components diagram**](#components-diagram)
     -   [**Database diagram**](#database-diagram)
+-   [**Development methodology**](#development-methodology)
 -   [**Time distribution**](#time-distribution)
+-   [**Conclusion**](#conclusion)
 
 --- 
 
@@ -138,6 +140,12 @@ MVC pattern helps to structure and manage the code in a clear and modular way, a
 
 ---
 
+## Development methodology
+
+The development methodology used in this project was iterative, the iterations were respected and done within the established time, though it can't be seen in the GitFlow of the project. This means it can not be proved that these iterations were acomplished as established, but in the Clockify report it can be seen.
+
+---
+
 ## Time distribution
 
 The inital stimated time to accomplish this project was 136 hours, but the project finished within 146 hours.
@@ -145,3 +153,19 @@ The inital stimated time to accomplish this project was 136 hours, but the proje
 ![](/doc/report_1.png)
 
 ![](/doc/report_2.png)
+
+---
+
+## Conclusion
+
+*Posible improvements*
+
+The future improvements to be implemented in the API is to enable more direct communication with inbox notifications, one posible reason could be to know when users suscribe to other users job offers.
+
+It would be great to have a bidirectional chat where musicians and enterpreneurs could talk directly if they want to.
+Also, the first thing to be implemented would be a CMS to enable the posibility of uploading images and not just drop the URL of the image when the user wants to sign up or create a job offer.
+
+*Difficulties*
+
+The API login at first was a nightmare, the implementation of a cookie with the exclusive use of it with Swagger was working great, but the encryption of the whole object of the user was reaching the limit of storage of the cookie, that problem appeared when I was developing the front-end. So to avoid that, first of all I reduced significantly the token, only storing the encrypted user name and then enable the possibility in the API to get the token in the headers.
+
