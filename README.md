@@ -142,7 +142,7 @@ MVC pattern helps to structure and manage the code in a clear and modular way, a
 
 ## Development methodology
 
-The development methodology used in this project was iterative, the iterations were respected and done within the established time, though it can't be seen in the GitFlow of the project. This means it can not be proved that these iterations were acomplished as established, but in the Clockify report it can be seen.
+The development methodology used in this project was iterative, the iterations were respected and done within the established time, though it can't be seen in the GitFlow of the project. This means it can not be proved that these iterations were acomplished as established, but in the Clockify report it can be seen (it's in the doc directory).
 
 ---
 
@@ -153,6 +153,19 @@ The inital stimated time to accomplish this project was 136 hours, but the proje
 ![](/doc/report_1.png)
 
 ![](/doc/report_2.png)
+
+---
+
+*Budget within one year*
+
+- Development time (creation of the API and front-end): 2.010 EUR
+- Deployment in a Digital Ocean virtual machine: 176,25 EUR
+- Maintenance of the application (up to 6 monthly hours): 60 EUR (720 EUR in a year)
+    - If hours exceed, the overcost/hour would be of 20EUR.
+- Cost of deployed server (monthly): 39 EUR (468 EUR in a year)
+- Cost of the domain name: 12 EUR
+
+**Total cost 3.386'25EUR**
 
 ---
 
@@ -168,4 +181,3 @@ Also, the first thing to be implemented would be a CMS to enable the posibility 
 *Difficulties*
 
 The API login at first was a nightmare, the implementation of a cookie with the exclusive use of it with Swagger was working great, but the encryption of the whole object of the user was reaching the limit of storage of the cookie, that problem appeared when I was developing the front-end. So to avoid that, first of all I reduced significantly the token, only storing the encrypted user name and then enable the possibility in the API to get the token in the headers.
-
